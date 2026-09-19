@@ -1,0 +1,17 @@
+"use client";
+import {useRef,useState} from 'react';
+import type {SiteContent} from '../data/content';
+import {textBlocks,type TextPage,type TextDevice,type TextPosition,type TextLayout} from '../data/text-layout';
+import {TextCanvas} from './FreeText';
+import {LiquidSelect} from './LiquidSelect';
+export function TextPlacementEditor({content,page,onChange,busy}:{content:SiteContent;page:TextPage;onChange:(c:SiteContent)=>void;busy:boolean}){
+ const [device,setDevice]=useState<TextDevice>('desktop'),[selected,setSelected]=useState(''),preview=useRef<HTMLDivElement>(null);const blocks=textBlocks(content.texts,page),id=blocks.some(b=>b.id===selected)?selected:blocks[0]?.id,layout=content.textLayouts?.[page]?.[device],position=layout?.positions[id];
+ function save(next:TextLayout|undefined){const devices={...content.textLayouts?.[page]};if(next)devices[device]=next;else delete devices[device];onChange({...content,textLayouts:{...content.textLayouts,[page]:devices}})}
+ function activate(){const node=preview.current?.querySelector<HTMLElement>('.free-text-canvas');if(!node)return;const base=node.getBoundingClientRect(),positions:Record<string,TextPosition>={};node.querySelectorAll<HTMLElement>('[data-text-block]').forEach(el=>{const r=el.getBoundingClientRect();positions[el.dataset.textBlock!]={x:0,y:Math.max(0,r.top-base.top),width:100}});save({height:Math.max(300,Math.min(1800,node.scrollHeight+80)),positions})}
+ function move(key:string,p:TextPosition){if(layout)save({...layout,positions:{...layout.positions,[key]:p}})}
+ return <details className="text-placement-editor"><summary>Placer les textes libres</summary><p>Déplacez les titres et paragraphes dans leur zone de texte. Les formulaires, photos et encadrés gardent leur place. Chaque format d’écran possède son propre placement.</p><fieldset disabled={busy}>
+ <label>Format d’écran<LiquidSelect value={device} onChange={e=>setDevice(e.target.value as TextDevice)}><option value="desktop">Ordinateur</option><option value="tablet">iPad / tablette</option><option value="phone">Smartphone</option></LiquidSelect></label>
+ {layout?<><label>Texte sélectionné<LiquidSelect value={id} onChange={e=>setSelected(e.target.value)}>{blocks.map(b=><option key={b.id} value={b.id}>{b.text.slice(0,65)||'Texte vide'}</option>)}</LiquidSelect></label>{position&&<div className="placement-controls">{(['x','y','width'] as const).map(key=><label key={key}>{{x:'Position horizontale (%)',y:'Position verticale (px)',width:'Largeur (%)'}[key]}<input type="number" value={Math.round(position[key])} min={key==='width'?15:0} max={key==='y'?1800:key==='width'?100-position.x:100-position.width} onChange={e=>{const value=e.target.valueAsNumber;if(!Number.isFinite(value))return;const max=key==='y'?1800:key==='width'?100-position.x:100-position.width;move(id,{...position,[key]:Math.max(key==='width'?15:0,Math.min(max,value))})}}/></label>)}</div>}<button type="button" className="button" onClick={()=>save(undefined)}>Rétablir le placement automatique</button></>:<button type="button" className="button" onClick={activate}>Activer le placement libre</button>}
+ <div className="text-placement-preview" data-device={device} ref={preview}><TextCanvas texts={content.texts} page={page} device={device} layout={layout} editing={!!layout&&!busy} onSelect={setSelected} selected={id} onMove={move}/></div>
+ </fieldset><p>Glissez un texte, ou utilisez les flèches du clavier. Cliquez sur ARXYLVE pour enregistrer et quitter.</p></details>;
+}

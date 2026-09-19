@@ -1,0 +1,32 @@
+"use client";
+import {Children,isValidElement,useCallback,useEffect,useId,useMemo,useRef,useState,type ReactNode,type SelectHTMLAttributes} from 'react';
+import {createPortal} from 'react-dom';
+import {useLanguage} from './LanguageProvider';
+import {translate} from '../data/translations';
+type Props=SelectHTMLAttributes<HTMLSelectElement>&{renderValue?:ReactNode;optionIcons?:Record<string,ReactNode>;searchable?:boolean};
+type Option={value:string;label:string;disabled:boolean};
+function nodeText(node:ReactNode):string{return Children.toArray(node).map(child=>isValidElement<{children?:ReactNode}>(child)?nodeText(child.props.children):String(child)).join('')}
+function readOptions(children:ReactNode):Option[]{return Children.toArray(children).flatMap(child=>{if(!isValidElement<{value?:string|number;label?:string;disabled?:boolean;children?:ReactNode}>(child))return [];if(child.type==='option')return [{value:String(child.props.value??nodeText(child.props.children)),label:child.props.label??nodeText(child.props.children),disabled:!!child.props.disabled}];return readOptions(child.props.children)})}
+export function LiquidSelect({children,renderValue,optionIcons,searchable,...props}:Props){
+ const {language}=useLanguage();const id=useId();const native=useRef<HTMLSelectElement>(null),trigger=useRef<HTMLButtonElement>(null),panel=useRef<HTMLDivElement>(null),search=useRef<HTMLInputElement>(null);
+ const options=useMemo(()=>readOptions(children),[children]);const value=String(props.value??props.defaultValue??options[0]?.value??'');
+ const [open,setOpen]=useState(false),[query,setQuery]=useState(''),[active,setActive]=useState(value),[position,setPosition]=useState({top:0,left:0,width:280,maxHeight:340});
+ const filtered=options.filter(o=>(o.label+' '+o.value).toLocaleLowerCase().includes(query.toLocaleLowerCase()));const hasSearch=searchable??options.length>9;
+ const selected=options.find(o=>o.value===value);
+ const place=useCallback(()=>{const rect=trigger.current?.getBoundingClientRect();if(!rect)return;const viewport=window.visualViewport;const h=viewport?.height??innerHeight;const width=Math.min(Math.max(rect.width,hasSearch?290:230),innerWidth-24);const below=h-rect.bottom-16,above=rect.top-16;const height=Math.min(360,Math.max(140,below>=180?below:above));setPosition({top:below>=180?rect.bottom+8:Math.max(12,rect.top-height-8),left:Math.max(12,Math.min(rect.left,innerWidth-width-12)),width,maxHeight:height})},[hasSearch]);
+ function show(){if(props.disabled||trigger.current?.matches(':disabled'))return;setQuery('');setActive(value);place();setOpen(true)}
+ function choose(next:string,keyboard=false){const option=options.find(o=>o.value===next);if(!option||option.disabled||!native.current)return;native.current.value=next;native.current.dispatchEvent(new Event('change',{bubbles:true}));setOpen(false);if(keyboard)trigger.current?.focus({preventScroll:true});else trigger.current?.blur()}
+ function keys(e:React.KeyboardEvent){const enabled=filtered.filter(o=>!o.disabled);const index=enabled.findIndex(o=>o.value===active);if(e.key==='Escape'){e.preventDefault();setOpen(false);trigger.current?.focus({preventScroll:true});return}if(e.key==='Tab'){setOpen(false);return}if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(!open){show();return}const n=Math.max(0,Math.min(enabled.length-1,index+(e.key==='ArrowDown'?1:-1)));if(enabled[n])setActive(enabled[n].value)}else if(open&&(e.key==='Home'||e.key==='End')&&e.target!==search.current){e.preventDefault();setActive(enabled[e.key==='Home'?0:enabled.length-1]?.value??'')}else if(open&&e.key==='Enter'){e.preventDefault();choose(active,true)}}
+ useEffect(()=>{if(!open)return;const outside=(e:PointerEvent)=>{if(!panel.current?.contains(e.target as Node)&&!trigger.current?.contains(e.target as Node))setOpen(false)};const reposition=()=>place();document.addEventListener('pointerdown',outside);window.addEventListener('resize',reposition);window.addEventListener('scroll',reposition,true);window.visualViewport?.addEventListener('resize',reposition);const frame=requestAnimationFrame(()=>{if(hasSearch)search.current?.focus({preventScroll:true})});return()=>{cancelAnimationFrame(frame);document.removeEventListener('pointerdown',outside);window.removeEventListener('resize',reposition);window.removeEventListener('scroll',reposition,true);window.visualViewport?.removeEventListener('resize',reposition)}},[open,hasSearch,place]);
+ useEffect(()=>{if(open)panel.current?.querySelector('[data-active=true]')?.scrollIntoView({block:'nearest'})},[active,open]);
+ return <div className={'liquid-select '+(props.className??'')}>
+  <select {...props} className="liquid-select-native" ref={native} tabIndex={-1} aria-hidden="true">{children}</select>
+  <button ref={trigger} type="button" className="liquid-select-trigger" role="combobox" aria-label={props['aria-label']} aria-labelledby={props['aria-labelledby']} aria-haspopup="listbox" aria-expanded={open} aria-controls={open?id:undefined} aria-activedescendant={open?id+'-'+active:undefined} disabled={props.disabled} onClick={()=>open?setOpen(false):show()} onKeyDown={keys}>
+   <span className="liquid-select-value">{renderValue??<>{optionIcons?.[value]}<span>{selected?.label}</span></>}</span><svg className="select-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+  </button>
+  {open&&createPortal(<div ref={panel} className="liquid-select-panel" style={position} onKeyDown={keys}>
+   {hasSearch&&<input ref={search} type="search" className="liquid-select-search" aria-label={translate('Rechercher',language)} placeholder={translate('Rechercher',language)} value={query} onChange={e=>{setQuery(e.target.value);const first=options.find(o=>!o.disabled&&(o.label+' '+o.value).toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase()));setActive(first?.value??'')}}/>}
+   <div id={id} role="listbox" aria-label={props['aria-label']} className="liquid-select-options">{filtered.map(option=><button type="button" role="option" aria-selected={value===option.value} disabled={option.disabled} tabIndex={-1} id={id+'-'+option.value} key={option.value} data-active={active===option.value} onPointerMove={()=>setActive(option.value)} onClick={e=>choose(option.value,e.detail===0)}>{optionIcons?.[option.value]}<span>{option.label}</span>{value===option.value&&<span className="select-check" aria-hidden="true">✓</span>}</button>)}{!filtered.length&&<p className="select-empty">{translate('Aucun résultat',language)}</p>}</div>
+  </div>,document.body)}
+ </div>;
+}

@@ -1,0 +1,1 @@
+import type {Metadata} from "next";import {CartPage} from "../../components/CartPage";export const metadata:Metadata={title:"Panier",description:"Votre sélection de sculptures miroir ARXYLVE."};export default function Page(){return <CartPage/>}

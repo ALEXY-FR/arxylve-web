@@ -1,0 +1,59 @@
+/* Three steps per device. Phi is a ratio, not a fixed Fibonacci sequence. */
+:root{--type-small:18px;--type-medium:calc(var(--type-small)*1.618034);--type-large:calc(var(--type-small)*2.618034);--space-unit:16px;--space-medium:26px;--space-large:42px}
+@media(min-width:768px) and (max-width:1199px), (min-width:768px) and (pointer:coarse){:root{--type-small:17px}}
+@media(max-width:767px){:root{--type-small:16px}}
+
+/* Supersede the old per-component sizes while keeping inherited hierarchy. */
+body{font-size:var(--type-small)!important;line-height:1.618}
+body *{font-size:inherit!important}
+body :is(h1,.gallery-title h1){font-size:var(--type-large)!important;line-height:1.15;letter-spacing:-.035em}
+body :is(h2,h3,.typed-example,.detail-price-row dd,.cart-total strong,.brand-button){font-size:var(--type-medium)!important;line-height:1.3}
+body :is(p,dl,label,input,textarea,select,button,.button,.desktop-nav,.language-selector,.liquid-select-panel,.availability,.edition-heading,.selection-note,.form-feedback,.image-note,.admin-status,.visual-notice){font-size:var(--type-small)!important}
+body .brand-button{font-size:var(--type-medium)!important}
+body .typed-example{font-size:var(--type-medium)!important}
+body .cart-total strong,body .detail-price-row dd{font-size:var(--type-medium)!important}
+body :is(p,dd,dt,h1,h2,h3,label,.button){overflow-wrap:anywhere}
+body .free-text-canvas>h1{font-size:var(--type-large)!important}
+.text-placement-preview[data-device=desktop]{--type-small:18px}
+.text-placement-preview[data-device=tablet]{--type-small:17px}
+.text-placement-preview[data-device=phone]{--type-small:16px}
+.text-placement-preview{--type-medium:calc(var(--type-small)*1.618034);--type-large:calc(var(--type-small)*2.618034);font-size:var(--type-small)!important}
+
+.body-copy,.selection-note,.consent{line-height:1.618}
+.desktop-nav{min-width:0}.site-header .desktop-nav a{white-space:normal;line-height:1.3;text-align:center;min-width:0}
+.site-header .desktop-nav a>.site-copy{min-width:0;max-width:100%;overflow-wrap:anywhere;hyphens:auto}
+.site-header{height:auto;min-height:var(--header-height)}
+.edition-heading{flex-wrap:wrap;gap:10px}.edition-heading>span{min-width:0}
+.masonry-meta{flex-wrap:wrap}.masonry-caption{padding:var(--space-unit) 6px 10px}
+.hover-artwork-info{max-height:calc(100% - 36px);overflow:auto;pointer-events:auto}
+.hover-artwork-info:not([data-visible=true]){pointer-events:none}
+.hover-artwork-info dl>div,.tablet-artwork-info dl>div{flex-wrap:wrap;gap:4px 12px}
+.hover-artwork-info dd,.tablet-artwork-info dd{margin-left:auto}
+.tablet-artwork-info h1{font-size:var(--type-medium)!important}
+.tablet-home-gallery{column-gap:var(--space-medium)}
+.tablet-artwork-info{padding:var(--space-unit)}
+.detail-data div{flex-wrap:wrap}.detail-data dd{margin-left:auto}
+.cart-total{flex-wrap:wrap;gap:var(--space-unit)}
+.phone-controls{grid-template-columns:minmax(124px,.382fr) minmax(0,1fr)}
+.liquid-select-trigger{min-width:0}.liquid-select-options button{white-space:normal;overflow-wrap:anywhere}
+.language-selector{min-width:98px}.language-selector .liquid-select-trigger{min-width:98px}
+.admin-main-nav{flex-wrap:wrap}.admin-main-nav button{white-space:normal}
+
+@media(min-width:1200px) and (pointer:fine){
+ .split-page{grid-template-columns:minmax(0,1fr) minmax(460px,1.618fr);gap:var(--space-large)}
+}
+@media(min-width:768px) and (max-width:1199px), (min-width:768px) and (pointer:coarse){
+ .tablet-home-gallery{grid-template-columns:minmax(0,1.618fr) minmax(240px,1fr)}
+ .site-header .brand-button{padding:10px 16px}
+}
+@media(max-width:767px){
+ .site-header .desktop-nav a{padding:8px 3px;min-height:48px}
+ .site-header .brand-button{padding:8px 14px}
+ .split-page{gap:var(--space-medium)}
+ .phone-controls{grid-template-columns:128px minmax(0,1fr)}
+ .cart-item h2{font-size:var(--type-medium)!important}
+}
+@media(max-width:359px){
+ :root{--header-height:182px}
+ .site-header .desktop-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-radius:26px}
+}

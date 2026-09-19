@@ -1,0 +1,18 @@
+.request-inbox{grid-column:1/-1;min-width:0;max-width:1100px;width:100%;margin:auto}
+.request-inbox>header,.request-card>header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.request-inbox>p{color:#bac2cf;margin:0 0 16px;max-width:75ch}.request-inbox>label{max-width:340px}
+.request-list{display:grid;gap:26px;margin-top:26px}
+.request-card{min-width:0;padding:26px;border:1px solid #afbed249;border-radius:28px;background:linear-gradient(135deg,#24354b70,#0b101bd9);box-shadow:inset 0 0 16px #b8c5da0a;backdrop-filter:blur(24px);overflow-wrap:anywhere}
+.request-card h3{margin:0}.request-card time{color:#bbc3d1}
+.request-contact{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}.request-contact a{white-space:normal;max-width:100%;overflow-wrap:anywhere}
+.request-message{white-space:pre-wrap;margin:20px 0}.request-card ul{padding-left:22px;margin:16px 0}.request-card>label{max-width:340px;margin:22px 0 0}
+.not-found-page{height:calc(100dvh - var(--header-height,110px));min-height:0;display:grid;place-items:center;overflow:auto;padding:26px var(--gutter,24px)}
+.not-found-panel{width:min(100%,740px);padding:42px;border-radius:32px;border:1px solid #a7b8cd55;background:linear-gradient(140deg,#1b2d5870,#10151ed4 65%,#64244835);box-shadow:inset 0 0 22px #d0ddf00c;backdrop-filter:blur(24px);text-align:center}
+.not-found-panel h1{margin:16px 0 26px}.not-found-panel>p:not(.eyebrow){max-width:48ch;margin:0 auto 26px;color:#bec5d2}.not-found-panel nav{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.not-found-panel h1 em{color:#d4c3d3}
+.lost-reflection{display:flex;justify-content:center;gap:12px;height:80px;margin-bottom:26px;perspective:500px}
+.lost-reflection span{display:block;width:42px;border:1px solid #bac9db80;border-radius:14px;background:linear-gradient(145deg,#e4eaf034,#1b2d5880 50%,#64244866);box-shadow:inset 0 0 12px #dde9fb24;animation:reflection-drift 8s ease-in-out infinite}
+.lost-reflection span:nth-child(2){animation-delay:-3s;background:linear-gradient(135deg,#cedddc38,#183b3280)}.lost-reflection span:nth-child(3){animation-delay:-5s}
+@keyframes reflection-drift{0%,100%{transform:translateY(5px) rotateY(-18deg)}50%{transform:translateY(-5px) rotateY(18deg)}}
+@media(max-width:767px){.not-found-page{height:auto;min-height:calc(100dvh - var(--header-height,140px));padding:16px}.not-found-panel{padding:26px 16px;border-radius:28px}.not-found-panel nav{flex-direction:column}.request-card{padding:16px}}
+@media(prefers-reduced-motion:reduce){.lost-reflection span{animation:none}}

@@ -1,0 +1,31 @@
+.liquid-select{position:relative;min-width:0;width:100%;font:inherit}
+.liquid-select-native{display:none!important}
+.liquid-select-trigger{display:flex;align-items:center;justify-content:space-between;gap:9px;width:100%;min-width:0;min-height:46px;padding:10px 13px;border:1px solid #aebbd345;border-radius:16px;color:inherit;font:inherit;line-height:1.3;background:linear-gradient(145deg,#ffffff12,#26304942 45%,#080e17b8);backdrop-filter:blur(20px) saturate(1.2);box-shadow:inset 0 -1px 4px #aeb9d519,0 6px 16px #0003;cursor:pointer;text-align:left;transition:border-color .2s,background .2s}
+.liquid-select-trigger:focus:not(:focus-visible){outline:none;box-shadow:inset 0 -1px 4px #aeb9d519,0 6px 16px #0003}
+.liquid-select-trigger:focus-visible{outline:2px solid #b3a2bc;outline-offset:3px}
+.liquid-select-trigger[aria-expanded=true]{border-color:#b4a3be88;background:linear-gradient(145deg,#64244845,#1b2d5860)}
+.liquid-select-value{display:flex;align-items:center;gap:9px;min-width:0;overflow:hidden}.liquid-select-value>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.select-chevron{width:14px!important;height:14px!important;flex:none;fill:none!important;stroke:currentColor;stroke-width:1.4;opacity:.7}
+.country-flag{width:24px!important;height:16px!important;min-width:24px;object-fit:cover;border-radius:3px;box-shadow:0 0 0 1px #ffffff24;flex:none;filter:none!important}
+.liquid-select-panel{position:fixed;z-index:1000;display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid #aebbd35a;border-radius:24px;background:linear-gradient(145deg,#273042d9,#141822e8 55%,#10141ed9);backdrop-filter:blur(30px) saturate(1.35);box-shadow:inset 0 1px 1px #e6e8ed18,0 20px 60px #0009;color:#edf0f6;overflow:hidden;animation:select-arrive .16s ease-out;font-family:var(--display)}
+.liquid-select-search{flex:none;width:100%;min-height:44px;padding:10px 12px;border:1px solid #9ba8be40;border-radius:14px;background:#070d1680;color:inherit;font:inherit;font-size:16px}
+.liquid-select-search:focus{outline:1px solid #baacc166;outline-offset:0}
+.liquid-select-options{overflow-y:auto;overscroll-behavior:contain;min-height:0;scrollbar-width:thin;scrollbar-color:#79839a66 transparent}
+.liquid-select-options button{width:100%;display:flex;align-items:center;gap:10px;border:1px solid transparent;background:transparent;color:inherit;border-radius:14px;padding:11px 12px;min-height:44px;text-align:left;font:inherit;font-size:14px;line-height:1.35}
+.liquid-select-options button[data-active=true]{background:#ffffff0b;border-color:#ffffff16}
+.liquid-select-options button[aria-selected=true]{background:linear-gradient(135deg,#6424488a,#1b2d5870);border-color:#a190a955}
+.liquid-select-options button>span:not(.select-check){flex:1}.select-check{font-size:15px;color:#ded1e3;margin-left:auto}.select-empty{padding:12px;font-size:14px;color:#b5bdce}
+.language-selector{border:0;padding:0!important;background:none;box-shadow:none;min-width:88px;width:auto;flex:none}
+.language-selector:focus-within{outline:none;box-shadow:none}
+.language-selector .liquid-select-trigger{border-radius:99px;min-height:42px;padding:10px 12px;min-width:88px;font-size:13px}
+.phone-controls>.liquid-select{align-self:stretch}.phone-controls .liquid-select-trigger{height:100%;font-size:14px;padding:10px}.phone-controls .liquid-select-value{gap:7px}
+.automatic-side-photos .liquid-select-trigger{min-height:32px;font-size:10px;padding:6px;border-radius:10px}.visual-tools>.liquid-select{max-width:300px}
+.admin-page .liquid-select-trigger{font-size:14px}.admin-page .liquid-select{margin:0}
+@keyframes select-arrive{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.liquid-select-panel{animation:none}.liquid-select-trigger{transition:none}}
+@media(max-width:767px){.language-selector .liquid-select-trigger{min-width:82px;padding:9px 10px}.phone-controls{grid-template-columns:125px minmax(0,1fr)}.liquid-select-panel{border-radius:22px}.liquid-select-options button{font-size:16px}}
+.translation-editor{border:1px solid #b3bfd23d;border-radius:20px;padding:4px 18px 18px;background:linear-gradient(135deg,#24395555,#1e112780)}
+.translation-editor summary{font-size:18px}
+.translation-editor textarea{width:100%;min-height:120px;resize:vertical}
+.translation-editor .liquid-select{width:100%;min-width:0}
+.translation-editor fieldset>label{grid-column:1/-1}

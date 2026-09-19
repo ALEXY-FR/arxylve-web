@@ -1,0 +1,28 @@
+.language-selector{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 12px;min-height:42px;min-width:80px;flex:none;border:1px solid #aab8cc50;border-radius:99px;background:linear-gradient(145deg,#ffffff12,#1b2d5860);box-shadow:inset 0 -1px 3px #7e9ecb30;backdrop-filter:blur(18px);color:#d9deea}
+.language-selector svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.3}
+.language-current{font-size:13px;white-space:nowrap}
+.language-selector select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.language-selector:focus-within{outline:2px solid #b9a3c3;outline-offset:3px}
+.language-selector option{color:#f0f1f5;background:#111722}
+html:lang(zh){--display:GrandCru,'Noto Serif CJK SC','Songti SC',serif}
+html:lang(ja){--display:GrandCru,'Noto Serif CJK JP','Yu Mincho',serif}
+html:lang(zh) h1,html:lang(ja) h1,html:lang(zh) h2,html:lang(ja) h2{letter-spacing:0;line-height:1.3}
+@media(min-width:1000px){.site-header{gap:18px}.site-header .desktop-nav{margin-left:auto}}
+@media(min-width:768px) and (max-width:999px){
+ :root{--header-height:140px}
+ .site-header{flex-wrap:wrap;gap:10px;height:var(--header-height)}
+ .site-header .desktop-nav{order:3;flex-basis:100%;justify-content:space-between}
+ .site-header .desktop-nav a{flex:1;text-align:center}
+ .language-selector{margin-left:auto}
+ .site-header .admin-shortcut{margin-left:auto}
+ .site-header .admin-shortcut+.language-selector{margin-left:0}
+}
+@media(max-width:767px){
+ .language-selector{margin-left:auto;min-height:42px;min-width:76px;padding:8px 10px}
+ .site-header .admin-shortcut{font-size:10px;padding:6px 8px;margin-left:auto}
+ .site-header .admin-shortcut+.language-selector{margin-left:0}
+ html:lang(ja) .site-header .desktop-nav a{font-size:clamp(10px,2.8vw,13px)}
+ html:lang(zh) .site-header .desktop-nav a{font-size:15px}
+ html:lang(de) .site-header .desktop-nav a,html:lang(pt) .site-header .desktop-nav a{font-size:clamp(11px,3.1vw,14px)}
+ .mobile-work-info>div{align-items:baseline}
+}

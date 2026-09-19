@@ -1,0 +1,8 @@
+{
+  "version": "2.0.0",
+  "tasks": [{
+    "label": "ARXYLVE : préparer l’aperçu", "type": "process", "command": "node", "args": ["scripts/preview-server.cjs"],
+    "isBackground": true, "presentation": {"reveal": "silent", "panel": "dedicated"},
+    "problemMatcher": {"owner": "arxylve-preview", "pattern": {"regexp": "^(NEVER_MATCH)$", "message": 1}, "background": {"activeOnStart": true, "beginsPattern": "ARXYLVE_START", "endsPattern": "ARXYLVE_READY"}}
+  }]
+}

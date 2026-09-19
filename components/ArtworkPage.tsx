@@ -1,0 +1,7 @@
+"use client";
+import {SiteCopy,useCopy} from "./SiteCopy";
+import {useLocalizedSite as useSite} from "./useLocalizedSite";
+import {FittedArtwork} from "./FittedArtwork";
+import {formatPrice} from "../data/sculptures";
+import {Acquire} from "./Acquire";
+export function ArtworkPage({slug}:{slug:string}){const t=useCopy();const {content}=useSite();const s=content.sculptures.find(s=>s.slug===slug);if(!s)return null;return <main id="contenu" className="section"><div className="detail-grid"><FittedArtwork key={s.slug} image={s.image} alt={s.imageAlt} photos={s.photos} videos={s.videos}/><div className="artwork-details-panel"><h1 data-copy-key="work:title">{s.title}</h1><p className="muted" data-copy-key="work:description">{s.description}</p><div className="artwork-facts"><dl className="detail-data"><div><dt><SiteCopy id="ArtworkPage.1" fallback="Matière"/></dt><dd data-copy-key="work:material">{s.material}</dd></div><div><dt><SiteCopy id="ArtworkPage.2" fallback="Dimensions"/></dt><dd data-copy-key="work:dimensions">{s.dimensions}</dd></div><div><dt><SiteCopy id="ArtworkPage.3" fallback="Édition"/></dt><dd data-copy-key="work:editionLabel">{s.editionLabel}</dd></div><div className="detail-price-row"><dt><SiteCopy id="ArtworkPage.4" fallback="Prix"/></dt><dd>{s.price===null?t("ArtworkPage.5","Prix sur demande"):formatPrice(s.price)}</dd></div></dl></div><Acquire sculpture={s}/></div></div></main>}

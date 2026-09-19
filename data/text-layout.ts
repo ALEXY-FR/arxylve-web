@@ -1,0 +1,8 @@
+import type {SiteContent} from './content';
+export type TextDevice='desktop'|'tablet'|'phone';
+export type TextPage='a-propos'|'sur-mesure';
+export type TextPosition={x:number;y:number;width:number};
+export type TextLayout={height:number;positions:Record<string,TextPosition>};
+export type TextLayouts=Partial<Record<TextPage,Partial<Record<TextDevice,TextLayout>>>>;
+export function textBlocks(texts:SiteContent['texts'],page:TextPage){const prefix=page==='a-propos'?'about':'custom';return ['Title','Intro','Body'].flatMap(kind=>{const key=(prefix+kind) as keyof SiteContent['texts'];return texts[key].split(/\n\n/).map((text,i)=>({id:key+':'+i,key,text,title:kind==='Title',intro:kind==='Intro'}))})}
+export function validateTextLayouts(layouts:TextLayouts|undefined){if(layouts===undefined)return;if(!layouts||typeof layouts!=='object'||Array.isArray(layouts))throw Error('Placement des textes invalide.');for(const [page,devices] of Object.entries(layouts)){if(!['a-propos','sur-mesure'].includes(page)||!devices||typeof devices!=='object'||Array.isArray(devices))throw Error('Page de placement invalide.');for(const [device,layout] of Object.entries(devices)){if(!['desktop','tablet','phone'].includes(device)||!layout||!Number.isFinite(layout.height)||layout.height<240||layout.height>1800||!layout.positions||typeof layout.positions!=='object'||Array.isArray(layout.positions)||Object.keys(layout.positions).length>100)throw Error('Zone de texte invalide.');for(const [key,p] of Object.entries(layout.positions) as [string,TextPosition][]){if(!/^(about|custom)(Title|Intro|Body):\d+$/.test(key)||!p||![p.x,p.y,p.width].every(Number.isFinite)||p.x<0||p.y<0||p.y>1800||p.width<15||p.width>100||p.x+p.width>100.01)throw Error('Texte hors de la zone de placement.')}}}}

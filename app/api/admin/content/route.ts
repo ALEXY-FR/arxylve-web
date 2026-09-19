@@ -1,0 +1,3 @@
+import {isAdmin,sameOrigin} from '../../../../lib/admin-auth';import {readContent,saveContent} from '../../../../lib/cms-store';
+export async function GET(){if(!await isAdmin())return Response.json({message:'Connexion requise.'},{status:401});return Response.json(await readContent(),{headers:{'Cache-Control':'no-store'}})}
+export async function PUT(request:Request){if(!sameOrigin(request)||!await isAdmin())return Response.json({message:'Connexion requise.'},{status:401});try{const text=await request.text();if(text.length>2e6)throw Error('Contenu trop volumineux.');return Response.json(await saveContent(JSON.parse(text)))}catch(e){return Response.json({message:e instanceof Error?e.message:'Enregistrement impossible.'},{status:400})}}
