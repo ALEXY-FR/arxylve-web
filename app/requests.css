@@ -1,4 +1,8 @@
 .request-inbox{grid-column:1/-1;min-width:0;max-width:1100px;width:100%;margin:auto}
+.cart-page[data-empty=true]{display:flex;align-items:center;justify-content:center;overflow:auto}
+.cart-page>.cart-empty{flex:0 0 auto;width:min(100%,540px);height:auto;min-height:0;max-width:540px;padding:42px;text-align:center;overflow:visible;margin:auto}
+.cart-empty h2{margin:0 0 16px}.cart-empty p{max-width:36ch;margin:0 auto 26px;color:#bec5d2;overflow-wrap:anywhere}.cart-empty .button{max-width:100%;justify-content:center;white-space:normal}
+@media(max-width:767px){.cart-page[data-empty=true]{min-height:calc(100dvh - var(--header-height,150px));height:auto}.cart-page>.cart-empty{padding:26px 20px}}
 .request-inbox>header,.request-card>header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 .request-inbox>p{color:#bac2cf;margin:0 0 16px;max-width:75ch}.request-inbox>label{max-width:340px}
 .request-list{display:grid;gap:26px;margin-top:26px}
