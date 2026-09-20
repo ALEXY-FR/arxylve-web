@@ -4,7 +4,7 @@ let queue=Promise.resolve();function serial<T>(fn:()=>Promise<T>):Promise<T>{con
 async function state(){return readJson<State>('devices.json',structuredClone(empty))}
 export async function isAdmin(){const jar=await cookies(),token=jar.get(cookieName)?.value,device=jar.get(deviceCookie)?.value;if(!token||!device)return false;const s=await state(),now=Date.now(),d=s.devices.find(d=>d.hash===digest(device)&&d.expires>now);return !!d&&s.sessions.some(t=>t.hash===digest(token)&&t.device===d.id&&t.expires>now)}
 export async function canTrustLegacy(){const existing=await readJson<State|null>('devices.json',null);if(existing)return false;const token=(await cookies()).get(cookieName)?.value,legacy=await readJson<Session|null>('session.json',null);return !!token&&!!legacy&&legacy.expires>Date.now()&&legacy.hash===digest(token)}
-export function sameOrigin(request:Request){return request.headers.get('origin')===new URL(request.url).origin}
+export {sameOrigin,secureAdminCookies} from './request-origin';
 export async function configured(){return !!await readJson<Credentials|null>('credentials.json',null)}
 async function deviceToken(){return (await cookies()).get(deviceCookie)?.value}
 async function addDevice(s:State,name:string){const token=randomBytes(32).toString('hex'),d={id:randomBytes(12).toString('hex'),hash:digest(token),name:name.trim().slice(0,80)||'Mon appareil',created:Date.now(),expires:Date.now()+365*86400000};s.devices.push(d);return {device:d,token}}
