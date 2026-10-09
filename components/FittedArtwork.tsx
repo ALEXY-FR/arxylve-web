@@ -1,7 +1,7 @@
 "use client";
 import {useCopy} from './SiteCopy';
 import Image from 'next/image';
-import {useEffect,useRef,useState} from 'react';
+import {useEffect,useRef,useState,type CSSProperties} from 'react';
 type Media={src:string;alt:string;video?:boolean};
 export function FittedArtwork({image,alt,photos,videos}:{image:string;alt:string;photos?:Media[];videos?:Media[]}){
  const t=useCopy(),host=useRef<HTMLDivElement>(null),rail=useRef<HTMLDivElement>(null);
@@ -12,7 +12,7 @@ export function FittedArtwork({image,alt,photos,videos}:{image:string;alt:string
  function choose(n:number){setActive(n);setFailed(false);rail.current?.children[n]?.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})}
  return <div className="fitted-artwork-host media-gallery" data-multiple={multiple} data-tray={hovered||keyboard}
  onPointerEnter={e=>{if(e.pointerType==='mouse')setHovered(true)}} onPointerLeave={()=>setHovered(false)} onPointerDown={()=>setKeyboard(false)} onFocus={e=>{if(e.target.matches(':focus-visible'))setKeyboard(true)}} onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node))setKeyboard(false)}}>
- <div ref={host} className="artwork-viewer"><div className="fitted-artwork-frame" tabIndex={0} aria-label={t('FittedArtwork.1','Photos de l’œuvre')} style={space.width?{width,height}:undefined}>
+ <div ref={host} className="artwork-viewer"><div className="fitted-artwork-frame" tabIndex={0} aria-label={t('FittedArtwork.1','Photos de l’œuvre')} style={{...(space.width?{width,height}:{}),"--media-ratio":ratio} as CSSProperties}>
  <div className="fitted-artwork-media">{selected.video?<video key={selected.src} controls playsInline preload="metadata" src={selected.src} aria-label={selected.alt} onLoadedMetadata={e=>{if(e.currentTarget.videoHeight)setRatio(e.currentTarget.videoWidth/e.currentTarget.videoHeight)}} onError={()=>setFailed(true)}/>:<Image key={selected.src} src={selected.src} alt={selected.alt} fill priority sizes="(max-width:767px) 100vw, 55vw" onLoad={e=>{if(e.currentTarget.naturalHeight)setRatio(e.currentTarget.naturalWidth/e.currentTarget.naturalHeight)}} onError={()=>setFailed(true)}/>}</div>
  {failed&&<p className="media-error" role="status">{selected.alt} — {t('FittedArtwork.error','Média indisponible.')}</p>}
 

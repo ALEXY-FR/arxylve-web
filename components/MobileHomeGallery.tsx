@@ -10,14 +10,20 @@ export function MobileHomeGallery(){
  const count=content.sculptures.length;
  useEffect(()=>{
   const node=rail.current;if(!node)return;
-  let lastWheel=0,sum=0,lastEvent=0,previousWidth=node.clientWidth;
-  const observer=new ResizeObserver(()=>{
+  let lastWheel=0,sum=0,lastEvent=0,previousWidth=node.clientWidth,frame=0;
+  const works=Array.from(node.querySelectorAll<HTMLElement>('.mobile-home-work'));
+  const measure=()=>{
    const index=previousWidth?Math.round(node.scrollLeft/previousWidth):0;
-   node.style.setProperty('--slide-height',node.clientHeight+'px');
    if(node.clientWidth!==previousWidth){node.scrollLeft=index*node.clientWidth;previousWidth=node.clientWidth}
-  });observer.observe(node);
+   const selected=works[Math.round(node.scrollLeft/node.clientWidth)];
+   if(selected)node.style.height=selected.offsetHeight+'px';
+  };
+  const schedule=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(measure)};
+  const observer=new ResizeObserver(schedule);observer.observe(node);works.forEach(work=>observer.observe(work));
+  node.addEventListener('scroll',schedule,{passive:true});schedule();
   const wheel=(event:WheelEvent)=>{
    if(event.ctrlKey||count<2||!node.clientWidth)return;
+   if(Math.abs(event.deltaY)>Math.abs(event.deltaX)&&document.documentElement.scrollHeight>innerHeight)return;
    event.preventDefault();const now=Date.now();if(now-lastWheel<650)return;
    if(now-lastEvent>180)sum=0;lastEvent=now;
    sum+=(Math.abs(event.deltaY)>Math.abs(event.deltaX)?event.deltaY:event.deltaX)*(event.deltaMode===1?16:event.deltaMode===2?node.clientWidth:1);
@@ -25,8 +31,8 @@ export function MobileHomeGallery(){
    const index=(Math.round(node.scrollLeft/node.clientWidth)+(sum>0?1:-1)+count)%count;
    sum=0;lastWheel=now;node.scrollTo({left:index*node.clientWidth,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
   };node.addEventListener('wheel',wheel,{passive:false});
-  return()=>{observer.disconnect();node.removeEventListener('wheel',wheel)};
- },[count]);
+  return()=>{observer.disconnect();cancelAnimationFrame(frame);node.removeEventListener('scroll',schedule);node.removeEventListener('wheel',wheel)};
+ },[count,content.sculptures]);
  return <div className="mobile-home-gallery" ref={rail} role="region" aria-label={t('HomeGallery.2','Galerie des sculptures : molette, glissement ou touches directionnelles')} tabIndex={0}
   onPointerDown={e=>{if(e.button!==0)return;start.current={x:e.clientX,y:e.clientY,left:e.currentTarget.scrollLeft,mouse:e.pointerType==='mouse'};dragged.current=false}}
   onPointerMove={e=>{const origin=start.current;if(!origin)return;if(Math.hypot(e.clientX-origin.x,e.clientY-origin.y)>12)dragged.current=true;if(origin.mouse&&dragged.current){e.currentTarget.setPointerCapture(e.pointerId);e.currentTarget.style.scrollSnapType='none';e.currentTarget.scrollLeft=origin.left+origin.x-e.clientX}}}
@@ -36,7 +42,7 @@ export function MobileHomeGallery(){
   <h1 className="sr-only">{t("HomeGallery.3","Sculptures miroir ARXYLVE")}</h1>
   {content.sculptures.map((item,index)=><article className="mobile-home-work" key={item.slug}>
    <Link href={'/collection/'+item.slug} className="mobile-work-image" aria-label={t("HomeGallery.attribute.1","Voir les informations et la fiche de ")+item.title} draggable={false} onClick={e=>{if(dragged.current&&e.detail!==0){e.preventDefault();dragged.current=false}}}>
-    <Image src={item.image} alt={item.imageAlt} width={1200} height={1200} sizes="(max-width:767px) 92vw, 1px" priority={index===0} draggable={false} onLoad={e=>{const image=e.currentTarget;if(image.naturalHeight)image.parentElement?.style.setProperty('--photo-ratio',String(image.naturalWidth/image.naturalHeight))}}/>
+    <Image src={item.image} alt={item.imageAlt} width={1200} height={1200} sizes="(max-width:767px) 92vw, 1px" priority={index===0} draggable={false}/>
    </Link>
   </article>)}
   {!content.sculptures.length&&<p>{t("HomeGallery.1","La collection se prépare.")}</p>}
