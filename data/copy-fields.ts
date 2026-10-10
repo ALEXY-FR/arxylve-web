@@ -327,7 +327,7 @@ export const copyFields=[
     "id": "CartPage.12",
     "source": "CartPage",
     "kind": "text",
-    "fallback": "Adressez votre sélection à l’atelier. Nous vous répondrons personnellement pour organiser la suite."
+    "fallback": "Adressez votre sélection à l’atelier. Je vous répondrai personnellement pour organiser la suite."
   },
   {
     "id": "InquiryForm.1",
@@ -483,7 +483,7 @@ export const copyFields=[
     "id": "InquiryForm.26",
     "source": "InquiryForm",
     "kind": "text",
-    "fallback": "Deux demandes au maximum avant notre réponse. Vos coordonnées servent à vous répondre. "
+    "fallback": "Deux demandes au maximum avant ma réponse. Je vous répondrai personnellement. Vos coordonnées me permettent de vous recontacter. "
   },
   {
     "id": "InquiryForm.27",
@@ -975,6 +975,6 @@ export const copyFields=[
     "id": "Acquire.10",
     "source": "Acquire",
     "kind": "text",
-    "fallback": "L’ajout au panier ne réserve pas l’œuvre. Disponibilité et livraison seront confirmées personnellement."
+    "fallback": "L’ajout au panier ne réserve pas l’œuvre. Je confirmerai personnellement la disponibilité et la livraison."
   }
 ] as const;

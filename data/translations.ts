@@ -1,5 +1,7 @@
 import type {Language} from './languages';
 import europeanData from './europe-translations.json';
+import recentData from './recent-translations.json';
+const recent:Record<string,Partial<Record<Language,string>>>=recentData;
 const european:Partial<Record<Language,Record<string,string>>>=europeanData;
 // French source followed by English, Simplified Chinese, Spanish, Portuguese,
 // German, Italian and Japanese. Names and edition identifiers are preserved.
@@ -148,7 +150,7 @@ const limits:Partial<Record<Language,string>>={fr:'Limitée à {n} exemplaires',
 export function translate(source:string,language:Language):string{
  if(language==='fr'||!source)return source;
  if(source.includes('\n'))return source.split('\n').map(line=>translate(line,language)).join('\n');
- const key=source.trim();const value=translations[key]?.[language]??european[language]?.[key];
+ const key=source.trim();const value=recent[key]?.[language]??translations[key]?.[language]??european[language]?.[key];
  if(value!==undefined)return source.slice(0,source.indexOf(key))+value+source.slice(source.indexOf(key)+key.length);
  const limited=key.match(/^Limitée à (\d+) exemplaires$/);if(limited)return (limits[language]??european[language]?.__limited??limits.en!).replace('{n}',limited[1]);
  if(key.startsWith('Visuel provisoire — '))return translate('Visuel provisoire',language)+' — '+key.slice('Visuel provisoire — '.length);

@@ -21,7 +21,7 @@ export function FittedArtwork({image,alt,photos,videos}:{image:string;alt:string
  {multiple&&<div ref={rail} className="artwork-photo-tray media-choice-rail" role="group" aria-label={t('FittedArtwork.2','Choisir une photographie')}
  onWheel={e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX))e.currentTarget.scrollLeft+=e.deltaY}}
  onKeyDown={e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const n=e.key==='Home'?0:e.key==='End'?views.length-1:(active+(e.key==='ArrowRight'?1:-1)+views.length)%views.length;choose(n);(rail.current?.children[n] as HTMLElement)?.focus()}if(e.key==='Escape'){setKeyboard(false);setHovered(false)}}}>
- {views.map((media,n)=><button key={media.src+':'+n} type="button" aria-label={(media.video?'Vidéo ':t('FittedArtwork.attribute.1','Photographie '))+(n+1)+' — '+media.alt} aria-pressed={active===n} onClick={()=>choose(n)}>
+ {views.map((media,n)=><button key={media.src+':'+n} type="button" aria-label={(media.video?t('FittedArtwork.video','Vidéo '):t('FittedArtwork.attribute.1','Photographie '))+(n+1)+' — '+media.alt} aria-pressed={active===n} onClick={()=>choose(n)}>
  {media.video?<><video src={media.src} muted playsInline preload="metadata" aria-hidden="true" onLoadedMetadata={e=>{if(e.currentTarget.videoHeight)e.currentTarget.parentElement!.style.aspectRatio=String(e.currentTarget.videoWidth/e.currentTarget.videoHeight)}}/><span className="media-play" aria-hidden="true">▶</span></>:<Image src={media.src} alt="" width={110} height={110} onLoad={e=>{if(e.currentTarget.naturalHeight)e.currentTarget.parentElement!.style.aspectRatio=String(e.currentTarget.naturalWidth/e.currentTarget.naturalHeight)}}/>}
  </button>)}
  </div>}
