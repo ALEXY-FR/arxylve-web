@@ -272,3 +272,6 @@ main,section,form,.split-page>*,.detail-grid>*,.cart-layout>*{min-width:0}
 .media-video-mark{position:absolute;right:5px;bottom:5px;padding:2px 4px;border-radius:5px;background:#11182acc;color:#fff;font-size:9px;line-height:1.2;pointer-events:none}
 
 .media-video-window{position:absolute;inset:4px;overflow:hidden;border-radius:9px}.media-video-window video{border-radius:0!important;max-width:none!important}.media-gallery .fitted-artwork-media video{max-width:none}
+
+/* The home preview plays only while the artwork is hovered. */
+.home-video-preview{display:block;position:absolute;inset:0;overflow:hidden;border-radius:inherit}.home-video-preview video{display:block;max-width:none;border-radius:0;pointer-events:none}
