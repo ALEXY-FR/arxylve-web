@@ -269,7 +269,6 @@ main,section,form,.split-page>*,.detail-grid>*,.cart-layout>*{min-width:0}
 .media-choice-rail button:first-child{margin-left:max(0px,calc(50% - var(--thumb-width)/2 - 8px))}
 .media-choice-rail button:last-child{margin-right:max(0px,calc(50% - var(--thumb-width)/2 - 8px))}
 .media-gallery .fitted-artwork-media[data-cropped=true] video{object-fit:cover}
-.media-video-mark{position:absolute;right:5px;bottom:5px;padding:2px 4px;border-radius:5px;background:#11182acc;color:#fff;font-size:9px;line-height:1.2;pointer-events:none}
 
 .media-video-window{position:absolute;inset:4px;overflow:hidden;border-radius:9px}.media-video-window video{border-radius:0!important;max-width:none!important}.media-gallery .fitted-artwork-media video{max-width:none}
 
