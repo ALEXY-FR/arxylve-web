@@ -1,11 +1,11 @@
 "use client";
+import {mediaRatio,type MediaFormat} from '../data/media-format';
 import {fullVideo,videoBorders,videoPlacement,type VideoCrop} from '../data/video-frame';
 import {useCopy} from './SiteCopy';
 import Image from 'next/image';
 import {useCallback,useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
-type Media={src:string;alt:string;video?:boolean;format?:'original'|'square'|'vertical'|'horizontal'};
-const formats={square:1,vertical:2/3,horizontal:3/2};
-function displayRatio(media:Media,natural:number){return media.video&&media.format&&media.format!=='original'?formats[media.format]:natural;}
+type Media={src:string;alt:string;video?:boolean;format?:MediaFormat};
+function displayRatio(media:Media,natural:number){return media.video?mediaRatio(media.format,natural):natural;}
 export function FittedArtwork({image,alt,photos,videos}:{image:string;alt:string;photos?:Media[];videos?:Media[]}){
  const t=useCopy(),host=useRef<HTMLDivElement>(null),rail=useRef<HTMLDivElement>(null),player=useRef<HTMLVideoElement>(null);
  const [space,setSpace]=useState({width:0,height:0}),[ratios,setRatios]=useState<Record<string,number>>({}),[crops,setCrops]=useState<Record<string,VideoCrop>>({}),[active,setActive]=useState(0),[hovered,setHovered]=useState(false),[keyboard,setKeyboard]=useState(false),[failed,setFailed]=useState(false);

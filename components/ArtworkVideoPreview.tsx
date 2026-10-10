@@ -1,14 +1,14 @@
 "use client";
+import {mediaRatio} from '../data/media-format';
 import Image from 'next/image';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {fullVideo,videoBorders,videoPlacement,type VideoCrop} from '../data/video-frame';
 import type {Sculpture} from '../data/sculptures';
 type Video=NonNullable<Sculpture['videos']>[number];
-const formats={square:1,vertical:2/3,horizontal:3/2};
 export function ArtworkVideoPreview({video,playing,poster,onRatio}:{video:Video;playing:boolean;poster:string;onRatio?:(ratio:number)=>void}){
  const player=useRef<HTMLVideoElement>(null),receiver=useRef(onRatio);
  const [natural,setNatural]=useState(1),[crop,setCrop]=useState<VideoCrop>(fullVideo),[failed,setFailed]=useState(false);
- const ratio=video.format&&video.format!=='original'?formats[video.format]:natural*crop.width/crop.height;
+ const ratio=mediaRatio(video.format,natural*crop.width/crop.height);
  useEffect(()=>{receiver.current=onRatio;},[onRatio]);
  useEffect(()=>{receiver.current?.(ratio);},[ratio]);
  const borders=useCallback((element:HTMLVideoElement)=>{

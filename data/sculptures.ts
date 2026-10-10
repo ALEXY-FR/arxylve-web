@@ -1,6 +1,7 @@
+import type {MediaFormat} from './media-format';
 export type AvailabilityStatus = "available" | "returning-soon" | "made-to-order" | "unavailable" | "production-ended" | "edition-complete" | "sold" | "exhibited";
 export type EditionType = "limited-numbered" | "unique" | "continuous-series" | "made-to-order" | "prototype" | "exhibition-piece";
-export type Sculpture = {slug:string;previousSlugs?:string[];title:string;description:string;material:string;dimensions:string;image:string;imageAlt:string;photos?:{src:string;alt:string;format?:"original"|"square"|"vertical"|"horizontal"}[];videos?:{src:string;alt:string;format?:"original"|"square"|"vertical"|"horizontal"}[];provisionalImage?:boolean;price:number|null;status:AvailabilityStatus;editionType:EditionType;editionLabel:string;totalEdition?:number;editionNames?:Record<string,string>;availableNumbers?:number[]};
+export type Sculpture = {slug:string;previousSlugs?:string[];title:string;description:string;material:string;dimensions:string;image:string;imageAlt:string;photos?:{src:string;alt:string;format?:MediaFormat}[];videos?:{src:string;alt:string;format?:MediaFormat}[];provisionalImage?:boolean;price:number|null;status:AvailabilityStatus;editionType:EditionType;editionLabel:string;totalEdition?:number;editionNames?:Record<string,string>;availableNumbers?:number[]};
 export const statusLabels:Record<AvailabilityStatus,string>={available:"Disponible", "returning-soon":"De retour prochainement", "made-to-order":"Sur commande",unavailable:"Indisponible","production-ended":"Production terminée","edition-complete":"Édition épuisée",sold:"Vendue",exhibited:"Exposée"};
 export const sculptures:Sculpture[] = [
   {

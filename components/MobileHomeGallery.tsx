@@ -1,21 +1,31 @@
 "use client";
+import {ArtworkVideoPreview} from './ArtworkVideoPreview';
+import {mediaRatio} from '../data/media-format';
+import type {Sculpture} from '../data/sculptures';
 import Image from "next/image";
 import Link from "next/link";
 import {useLocalizedSite as useSite} from "./useLocalizedSite";
 import {useCopy} from "./SiteCopy";
-import {useEffect,useRef} from 'react';
+import {useEffect,useRef,useState} from 'react';
 
+function MobileVideo({video,poster,playing}:{video:NonNullable<Sculpture['videos']>[number];poster:string;playing:boolean}){
+ const [ratio,setRatio]=useState(()=>mediaRatio(video.format,1));
+ return <span className="mobile-home-video" style={{aspectRatio:ratio}}><ArtworkVideoPreview video={video} poster={poster} playing={playing} onRatio={setRatio}/></span>;
+}
 export function MobileHomeGallery(){
  const {content}=useSite();const t=useCopy();const rail=useRef<HTMLDivElement>(null),start=useRef<{x:number;y:number;left:number;mouse:boolean}|null>(null),dragged=useRef(false);
- const count=content.sculptures.length;
+ const count=content.sculptures.length;const [active,setActive]=useState(0),[visible,setVisible]=useState(false);
+ useEffect(()=>{const node=rail.current;if(!node)return;const observer=new IntersectionObserver(([entry])=>setVisible(entry.isIntersecting),{threshold:.1});observer.observe(node);return()=>observer.disconnect();},[]);
  useEffect(()=>{
   const node=rail.current;if(!node)return;
   let lastWheel=0,sum=0,lastEvent=0,previousWidth=node.clientWidth,frame=0;
   const works=Array.from(node.querySelectorAll<HTMLElement>('.mobile-home-work'));
   const measure=()=>{
+   if(!node.clientWidth)return;
    const index=previousWidth?Math.round(node.scrollLeft/previousWidth):0;
    if(node.clientWidth!==previousWidth){node.scrollLeft=index*node.clientWidth;previousWidth=node.clientWidth}
-   const selected=works[Math.round(node.scrollLeft/node.clientWidth)];
+   const indexNow=Math.round(node.scrollLeft/node.clientWidth);setActive(indexNow);
+   const selected=works[indexNow];
    if(selected)node.style.height=selected.offsetHeight+'px';
   };
   const schedule=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(measure)};
@@ -42,7 +52,7 @@ export function MobileHomeGallery(){
   <h1 className="sr-only">{t("HomeGallery.3","Sculptures miroir ARXYLVE")}</h1>
   {content.sculptures.map((item,index)=><article className="mobile-home-work" key={item.slug}>
    <Link href={'/collection/'+item.slug} className="mobile-work-image" aria-label={t("HomeGallery.attribute.1","Voir les informations et la fiche de ")+item.title} draggable={false} onClick={e=>{if(dragged.current&&e.detail!==0){e.preventDefault();dragged.current=false}}}>
-    <Image src={item.image} alt={item.imageAlt} width={1200} height={1200} sizes="(max-width:767px) 92vw, 1px" priority={index===0} draggable={false}/>
+    {item.videos?.[0]?<MobileVideo key={item.videos[0].src} video={item.videos[0]} poster={item.image} playing={visible&&active===index}/>:<Image src={item.image} alt={item.imageAlt} width={1200} height={1200} sizes="(max-width:767px) 92vw, 1px" priority={index===0} draggable={false}/>}
    </Link>
   </article>)}
   {!content.sculptures.length&&<p>{t("HomeGallery.1","La collection se prépare.")}</p>}
