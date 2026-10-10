@@ -262,3 +262,13 @@ main,section,form,.split-page>*,.detail-grid>*,.cart-layout>*{min-width:0}
 .free-text-canvas[data-device=phone][data-custom=true]>h1,.text-placement-preview .free-text-canvas[data-device=phone]>h1{font-size:42px}
 .split-page>div:has(>.free-text-canvas[data-custom=true]){min-width:0;overflow:auto;max-height:100%}
 @media(max-width:999px){.split-page>div:has(>.free-text-canvas[data-custom=true]){max-height:none;overflow:visible}}
+
+/* A centred filmstrip selects media as it scrolls, without moving the page. */
+.media-gallery>.media-choice-rail{scroll-snap-type:x mandatory;overscroll-behavior-x:contain;direction:ltr}
+.media-choice-rail button{--thumb-width:max(44px,calc(68px * var(--thumb-ratio,1)));width:var(--thumb-width);aspect-ratio:var(--thumb-ratio,1);scroll-snap-align:center;scroll-snap-stop:always}
+.media-choice-rail button:first-child{margin-left:max(0px,calc(50% - var(--thumb-width)/2 - 8px))}
+.media-choice-rail button:last-child{margin-right:max(0px,calc(50% - var(--thumb-width)/2 - 8px))}
+.media-gallery .fitted-artwork-media[data-cropped=true] video{object-fit:cover}
+.media-video-mark{position:absolute;right:5px;bottom:5px;padding:2px 4px;border-radius:5px;background:#11182acc;color:#fff;font-size:9px;line-height:1.2;pointer-events:none}
+
+.media-video-window{position:absolute;inset:4px;overflow:hidden;border-radius:9px}.media-video-window video{border-radius:0!important;max-width:none!important}.media-gallery .fitted-artwork-media video{max-width:none}
