@@ -29,7 +29,7 @@ La configuration de messagerie du projet sur le Bureau est préservée. Ne pas p
 
 Accueil ordinateur : image agrandie, photos secondaires et informations au survol. Sur iPad : image principale et panneau d’informations de même hauteur, avec les photos secondaires en dessous. Sur smartphone : balayage entre les œuvres et appui pour ouvrir la fiche. Les fiches réunissent photos et vidéos dans une galerie sélectionnable ; jusqu’à 24 photos supplémentaires et 12 vidéos par œuvre. Les 6 premières photos secondaires apparaissent à l’accueil.
 
-La collection défile dans sa propre fenêtre. Les cartes sont rangées en mosaïque, en séparant d’abord les états disponibles / sur commande des autres états. Les huit maquettes de formats sont uniquement destinées à la démonstration : elles réutilisent le visuel provisoire, sont signalées et n’entrent jamais dans le panier. Le bouton Masquer les maquettes permet de retrouver les deux œuvres réelles.
+La collection défile dans sa propre fenêtre. Les cartes sont rangées en mosaïque, en séparant d’abord les états disponibles / sur commande des autres états. Les huit maquettes de formats sont uniquement destinées à la démonstration : elles réutilisent une photographie existante, sont signalées et n’entrent jamais dans le panier. Le bouton Masquer les maquettes permet de retrouver les œuvres publiées.
 
 ## Coordonnées et limite de contact
 
@@ -42,3 +42,5 @@ Après avoir répondu à une personne, ouvrir Reponse-envoyee.cmd dans le dossie
 Ce stockage convient à un serveur Node unique avec disque persistant. Pour un hébergement sans disque persistant ou plusieurs serveurs, il faut un stockage partagé transactionnel. CONTACT_STATE_DIR peut définir un dossier privé persistant. Si le processus s’interrompt pendant une écriture et laisse contact.lock, arrêter les instances du serveur avant de supprimer ce dossier de verrou vide ; ne pas supprimer contacts.json.
 
 Sources techniques : https://github.com/catamphetamine/libphonenumber-js et https://www.twilio.com/docs/verify/api (service de confirmation par code à connecter si souhaité).
+
+Reflet d’Eau est le premier miroir réussi d’Alexy Mekerke : une sculpture miroir bleue en exemplaire unique. Sa photographie originale est conservée sous `/images/reflet-deau.jpg`. Sa fiche conserve `/collection/ligne-deau` ; l’ancienne fiche de démonstration `/collection/faille-01` redirige vers elle si elle n’a pas été remplacée par une œuvre personnalisée. Les données de démonstration non modifiées du CMS sont normalisées à la lecture ; les œuvres personnalisées restent intactes.

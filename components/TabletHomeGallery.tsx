@@ -21,7 +21,7 @@ export function TabletHomeGallery(){
  function move(delta:number){if(count<2)return;setActive(n=>(n+delta+count)%count);setPhoto(null)}
  useEffect(()=>{const node=root.current;if(!node)return;let last=0;const wheel=(e:WheelEvent)=>{if(e.ctrlKey||!node.clientWidth||(e.target as HTMLElement).closest('.tablet-artwork-info'))return;e.preventDefault();if(Date.now()-last<650||Math.abs(e.deltaY)+Math.abs(e.deltaX)<20||count<2)return;last=Date.now();const delta=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;setActive(n=>(n+(delta>0?1:-1)+count)%count);setPhoto(null)};node.addEventListener('wheel',wheel,{passive:false});return()=>node.removeEventListener('wheel',wheel)},[count]);
  const item=content.sculptures[active]??content.sculptures[0];if(!item)return null;
- const photos=(item.photos?.length?item.photos:[{src:item.image,alt:item.imageAlt},{src:item.image,alt:item.imageAlt}]).slice(0,6),selected=photo===null?{src:item.image,alt:item.imageAlt}:photos[photo];
+ const photos=(item.photos??[]).slice(0,6),selected=photo===null?{src:item.image,alt:item.imageAlt}:photos[photo];
  return <div className="tablet-home-gallery" ref={root} tabIndex={0} role="region" aria-label={t('HomeGallery.2','Galerie des sculptures : molette, glissement ou touches directionnelles')}
  onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();move(e.key==='ArrowRight'?1:-1)}}}
  onPointerDown={e=>{dragged.current=false;if(!(e.target as HTMLElement).closest('.tablet-artwork-info'))start.current={x:e.clientX,y:e.clientY}}}
@@ -34,6 +34,6 @@ export function TabletHomeGallery(){
  <div><dt>{t('HomeGallery.6','État')}</dt><dd>{t('status.'+item.status,statusLabels[item.status])}</dd></div>
  <div><dt>{t('HomeGallery.7','Prix')}</dt><dd>{item.price===null?t('HomeGallery.8','Sur demande'):formatPrice(item.price)}</dd></div>
  </dl></section>
- <div className="tablet-secondary-photos" style={{gridTemplateColumns:`repeat(${Math.min(3,photos.length)}, minmax(0,1fr))`}}>{photos.map((p,i)=><TabletPhoto key={item.slug+':'+i+':'+p.src} src={p.src} alt={p.alt} onClick={()=>{if(!dragged.current)setPhoto(i)}}/>)}</div>
+ {photos.length>0&&<div className="tablet-secondary-photos" style={{gridTemplateColumns:`repeat(${Math.min(3,photos.length)}, minmax(0,1fr))`}}>{photos.map((p,i)=><TabletPhoto key={item.slug+':'+i+':'+p.src} src={p.src} alt={p.alt} onClick={()=>{if(!dragged.current)setPhoto(i)}}/>)}</div>}
  </div>;
 }

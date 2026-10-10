@@ -970,5 +970,11 @@ export const copyFields=[
     "source": "AboutSlideshow",
     "kind": "aria-label",
     "fallback": "Afficher la photo "
+  },
+  {
+    "id": "Acquire.10",
+    "source": "Acquire",
+    "kind": "text",
+    "fallback": "L’ajout au panier ne réserve pas l’œuvre. Disponibilité et livraison seront confirmées personnellement."
   }
 ] as const;
