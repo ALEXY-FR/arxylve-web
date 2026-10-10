@@ -1,3 +1,4 @@
+import {findArtwork} from '../../../data/artwork-slugs';
 import {isTrustedContactBrowser,sameOrigin} from "../../../lib/admin-auth";
 import {formatContactEmail} from "../../../lib/contact-email";
 import {readContent} from "../../../lib/cms-store";
@@ -82,9 +83,10 @@ export async function POST(request: Request) {
 
     for (const item of payload.selection) {
       if (!item || typeof item !== "object" || typeof item.slug !== "string") return NextResponse.json({message:"Sélection invalide."},{status:400});
-      const sculpture = sculptures.find(s => s.slug === item.slug);
-      if (!sculpture || !isSelectable(sculpture,item.number) || seen.has(selectionKey(item))) return NextResponse.json({message:"Un exemplaire n’est plus disponible. Actualisez votre panier."},{status:409});
-      seen.add(selectionKey(item));
+      const sculpture = findArtwork(sculptures,item.slug);
+      const canonicalKey=selectionKey({...item,slug:sculpture?.slug??item.slug});
+      if (!sculpture || !isSelectable(sculpture,item.number) || seen.has(canonicalKey)) return NextResponse.json({message:"Un exemplaire n’est plus disponible. Actualisez votre panier."},{status:409});
+      seen.add(canonicalKey);
       artworkLines.push(sculpture.title + (item.number !== undefined ? " — " + editionName(sculpture,item.number) : "") + " — " + formatPrice(sculpture.price!));
     }
   }
