@@ -31,7 +31,7 @@ function MobileWorkCard({item,playing,first,suppressClick}:{item:Sculpture;playi
    </span>
   </Link>
   <div ref={info} className="mobile-work-info">
-   <div className="mobile-work-heading"><h2><Link href={href} onClick={suppressClick}>{item.title}</Link></h2>{slides.length>1&&<span className="mobile-slide-count" aria-hidden="true">{index+1}/{slides.length}</span>}</div>
+   <div className="mobile-work-heading"><h2><Link href={href} onClick={suppressClick}>{item.title}</Link></h2></div>
    <dl><div><dt>{t('HomeGallery.4','Édition')}</dt><dd>{item.editionLabel}</dd></div><div><dt>{t('HomeGallery.5','Dimensions')}</dt><dd>{item.dimensions}</dd></div><div><dt>{t('HomeGallery.6','État')}</dt><dd>{t('status.'+item.status,statusLabels[item.status])}</dd></div><div><dt>{t('HomeGallery.7','Prix')}</dt><dd>{item.price===null?t('HomeGallery.8','Sur demande'):formatPrice(item.price)}</dd></div></dl>
   </div>
  </div>;
