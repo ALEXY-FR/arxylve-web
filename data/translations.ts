@@ -150,7 +150,7 @@ const limits:Partial<Record<Language,string>>={fr:'Limitée à {n} exemplaires',
 export function translate(source:string,language:Language):string{
  if(language==='fr'||!source)return source;
  if(source.includes('\n'))return source.split('\n').map(line=>translate(line,language)).join('\n');
- const key=source.trim();const value=recent[key]?.[language]??translations[key]?.[language]??european[language]?.[key];
+ const key=source.trim();const lookupKey=key==='Sur-Mesure'?'Sur mesure':key==='À Propos'?'À propos':key;const value=recent[lookupKey]?.[language]??translations[lookupKey]?.[language]??european[language]?.[lookupKey];
  if(value!==undefined)return source.slice(0,source.indexOf(key))+value+source.slice(source.indexOf(key)+key.length);
  const limited=key.match(/^Limitée à (\d+) exemplaires$/);if(limited)return (limits[language]??european[language]?.__limited??limits.en!).replace('{n}',limited[1]);
  if(key.startsWith('Visuel provisoire — '))return translate('Visuel provisoire',language)+' — '+key.slice('Visuel provisoire — '.length);
