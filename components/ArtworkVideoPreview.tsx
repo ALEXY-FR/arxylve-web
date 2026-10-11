@@ -5,11 +5,11 @@ import {useCallback,useEffect,useRef,useState} from 'react';
 import {fullVideo,videoBorders,videoPlacement,type VideoCrop} from '../data/video-frame';
 import type {Sculpture} from '../data/sculptures';
 type Video=NonNullable<Sculpture['videos']>[number];
-export function ArtworkVideoPreview({video,playing,poster,onRatio}:{video:Video;playing:boolean;poster:string;onRatio?:(ratio:number)=>void}){
- const player=useRef<HTMLVideoElement>(null),receiver=useRef(onRatio);
+export function ArtworkVideoPreview({video,playing,poster,onRatio,loop=true,retain=false,sizes='24vw',onReady,onEnded,onUnavailable}:{video:Video;playing:boolean;poster:string;onRatio?:(ratio:number)=>void;loop?:boolean;retain?:boolean;sizes?:string;onReady?:()=>void;onEnded?:()=>void;onUnavailable?:()=>void}){
+ const player=useRef<HTMLVideoElement>(null),receiver=useRef(onRatio),unavailable=useRef(onUnavailable);
  const [natural,setNatural]=useState(1),[crop,setCrop]=useState<VideoCrop>(fullVideo),[failed,setFailed]=useState(false);
  const ratio=mediaRatio(video.format,natural*crop.width/crop.height);
- useEffect(()=>{receiver.current=onRatio;},[onRatio]);
+ useEffect(()=>{receiver.current=onRatio;unavailable.current=onUnavailable;},[onRatio,onUnavailable]);
  useEffect(()=>{receiver.current?.(ratio);},[ratio]);
  const borders=useCallback((element:HTMLVideoElement)=>{
   if(element.readyState<2||!element.videoWidth||!element.videoHeight)return;
@@ -26,11 +26,11 @@ export function ArtworkVideoPreview({video,playing,poster,onRatio}:{video:Video;
   }catch{/* Keep the source proportions if pixels cannot be inspected. */}
  },[]);
  useEffect(()=>{
-  const element=player.current;if(!element||!playing||failed)return;let visible=true;
-  const sync=()=>{if(visible&&document.visibilityState==='visible'){element.muted=true;void element.play().catch(()=>{});}else element.pause();};
+  const element=player.current;if(!element)return;if(!playing||failed){element.pause();return;}let visible=true;
+  const sync=()=>{if(visible&&document.visibilityState==='visible'){element.muted=true;void element.play().catch(error=>{if(error?.name!=='AbortError')unavailable.current?.();});}else element.pause();};
   const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;sync();},{threshold:.1});observer.observe(element);
   const timer=setTimeout(()=>borders(element),600);element.addEventListener('canplay',sync);document.addEventListener('visibilitychange',sync);sync();
   return()=>{clearTimeout(timer);observer.disconnect();element.removeEventListener('canplay',sync);document.removeEventListener('visibilitychange',sync);element.pause();};
  },[playing,failed,borders]);
- return <span className="home-video-preview">{playing&&!failed?<video ref={player} src={video.src} poster={poster} aria-label={video.alt} autoPlay muted loop playsInline disablePictureInPicture disableRemotePlayback preload="auto" style={videoPlacement(natural,crop,ratio)} onLoadedMetadata={event=>{if(event.currentTarget.videoHeight)setNatural(event.currentTarget.videoWidth/event.currentTarget.videoHeight);}} onLoadedData={event=>borders(event.currentTarget)} onError={()=>setFailed(true)}/>:<Image src={poster} alt={video.alt} fill sizes="24vw" style={{objectFit:'contain'}}/>}</span>;
+ return <span className="home-video-preview">{(playing||retain)&&!failed?<video ref={player} src={video.src} poster={poster} aria-label={video.alt} autoPlay={playing} muted loop={loop} playsInline disablePictureInPicture disableRemotePlayback preload="auto" style={videoPlacement(natural,crop,ratio)} onLoadedMetadata={event=>{if(event.currentTarget.videoHeight)setNatural(event.currentTarget.videoWidth/event.currentTarget.videoHeight);}} onLoadedData={event=>borders(event.currentTarget)} onCanPlay={()=>onReady?.()} onEnded={onEnded} onError={()=>{setFailed(true);onUnavailable?.();}}/>:<Image src={poster} alt={video.alt} fill sizes={sizes} style={{objectFit:'contain'}}/>}</span>;
 }

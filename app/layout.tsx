@@ -13,6 +13,7 @@ import "./languages.css";
 import "./selects.css";
 import "./type-scale.css";
 import "./requests.css";
+import "./mobile-gallery.css";
 import {SiteProvider} from "../components/SiteProvider";
 import {readContent} from "../lib/cms-store";
 import {isAdmin} from "../lib/admin-auth";
