@@ -1,24 +1,15 @@
 "use client";
 
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {AmbientBackground} from './AmbientBackground';
-import {palette} from '../data/palette';
 import {usePathname} from 'next/navigation';
 
 // The root layout persists across navigation: show this only on a home arrival.
 export function SitePreloader() {
   const pathname = usePathname();
-  const wordmark = useRef<HTMLSpanElement>(null);
   const [phase, setPhase] = useState<'loading' | 'leaving' | 'hidden'>(pathname === '/' ? 'loading' : 'hidden');
 
-  useEffect(() => {
-    const tones = [{name:'Blanc',rgb:'243 245 250'}, ...palette];
-    const tone = tones[Math.floor(Math.random() * tones.length)];
-    wordmark.current?.style.setProperty('--preloader-title-color', tone.rgb);
-    wordmark.current?.setAttribute('data-tone', tone.name);
-  }, []);
-
-  useEffect(() => {
+useEffect(() => {
     if (pathname !== '/' || phase !== 'loading') return;
     let cancelled = false;
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -101,7 +92,7 @@ export function SitePreloader() {
           </div>
         </div>
         <span className="preloader-disc-shadow"/>
-        <span ref={wordmark} className="preloader-disc-wordmark">ARXYLVE</span>
+        <span className="preloader-disc-wordmark">ARXYLVE</span>
       </div>
     </div>
     <noscript><style>{'.site-preloader{display:none!important}'}</style></noscript>

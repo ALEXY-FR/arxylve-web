@@ -29,12 +29,12 @@
   animation:preloader-disc-reflection 8s ease-in-out infinite alternate;
 }
 .preloader-disc-shadow{position:absolute;top:calc(var(--disc-size) + 29px);width:calc(var(--disc-size)*.65);height:12px;border-radius:50%;background:radial-gradient(ellipse,#b3587633,transparent 72%);filter:blur(9px);opacity:.55}
-.preloader-disc-wordmark{position:absolute;bottom:0;left:50%;transform:translateX(-50%);font:300 48px/1 GrandCru,Arial,sans-serif;font-size:clamp(38px,4.7vw,54px)!important;letter-spacing:.16em;color:color-mix(in srgb,rgb(var(--preloader-title-color,243 245 250)) 58%,#fff);text-shadow:0 0 24px rgb(var(--preloader-title-color,243 245 250)/.25);white-space:nowrap;opacity:1;transition:opacity 900ms ease}
+.preloader-disc-wordmark{position:absolute;bottom:0;left:50%;transform:translateX(-50%);font:300 48px/1 GrandCru,Arial,sans-serif;font-size:clamp(38px,4.7vw,54px)!important;letter-spacing:.16em;color:#fff;text-shadow:0 0 24px #ffffff2b;white-space:nowrap;opacity:1;transition:opacity 900ms ease}
 .site-preloader[data-phase="leaving"]{opacity:0;pointer-events:none}
 .site-preloader[data-phase="leaving"] .preloader-disc-wrap{transform:scale(1.85);filter:blur(5px)}
 .site-preloader[data-phase="leaving"] .preloader-disc-wordmark{opacity:0}
 @keyframes preloader-disc-arrive{from{opacity:0;transform:translateY(5px);filter:blur(2px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
-@keyframes preloader-disc-approach{from{transform:scale(.94)}to{transform:scale(1.6)}}
+@keyframes preloader-disc-approach{from{transform:scale(.28)}to{transform:scale(1.6)}}
 @keyframes preloader-disc-liquid{from{transform:translate(-3%,1%) rotate(-4deg) scale(1.18) skewX(-2deg)}to{transform:translate(4%,-2%) rotate(4deg) scale(1.21) skewX(3deg)}}
 @keyframes preloader-disc-reflection{from{transform:rotate(-24deg);opacity:.55}to{transform:rotate(15deg);opacity:.95}}
 @keyframes preloader-disc-glow{from{opacity:.5;scale:.95}to{opacity:.8;scale:1.1}}
