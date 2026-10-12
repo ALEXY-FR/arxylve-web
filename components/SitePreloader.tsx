@@ -1,12 +1,22 @@
 "use client";
 
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import {AmbientBackground} from './AmbientBackground';
+import {palette} from '../data/palette';
 import {usePathname} from 'next/navigation';
 
 // The root layout persists across navigation: show this only on a home arrival.
 export function SitePreloader() {
   const pathname = usePathname();
+  const wordmark = useRef<HTMLSpanElement>(null);
   const [phase, setPhase] = useState<'loading' | 'leaving' | 'hidden'>(pathname === '/' ? 'loading' : 'hidden');
+
+  useEffect(() => {
+    const tones = [{name:'Blanc',rgb:'243 245 250'}, ...palette];
+    const tone = tones[Math.floor(Math.random() * tones.length)];
+    wordmark.current?.style.setProperty('--preloader-title-color', tone.rgb);
+    wordmark.current?.setAttribute('data-tone', tone.name);
+  }, []);
 
   useEffect(() => {
     if (pathname !== '/' || phase !== 'loading') return;
@@ -71,6 +81,7 @@ export function SitePreloader() {
   if (pathname !== '/' || phase === 'hidden') return null;
   return <>
     <div className="site-preloader" data-variant="disc" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
+      <AmbientBackground/>
       <div className="preloader-disc-scene" aria-hidden="true">
         <div className="preloader-disc-halo"/>
         <div className="preloader-disc-wrap">
@@ -90,7 +101,7 @@ export function SitePreloader() {
           </div>
         </div>
         <span className="preloader-disc-shadow"/>
-        <span className="preloader-disc-wordmark">ARXYLVE</span>
+        <span ref={wordmark} className="preloader-disc-wordmark">ARXYLVE</span>
       </div>
     </div>
     <noscript><style>{'.site-preloader{display:none!important}'}</style></noscript>
