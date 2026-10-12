@@ -49,19 +49,21 @@ export async function mountSiteGlass() {
   function remove(record:Surface){record.canvas.remove();record.canvas.width=record.canvas.height=0;record.host.style.position=record.position;record.host.style.removeProperty('--liquid-image');delete record.host.dataset.resourceGlass;delete record.host.dataset.liquidReady;records.delete(record.host);}
   function scan(){
     scanFrame=0;
+    const adminView=location.pathname==='/admin'||location.pathname.startsWith('/admin/');
+    const keepGlass=(host:HTMLElement)=>adminView||host.matches('.preloader-disc,.preloader-disc-wordmark,.brand-button');
     for(const record of records.values()){
-      if(!record.host.isConnected)remove(record);
+      if(!record.host.isConnected||!keepGlass(record.host))remove(record);
       else if(!record.native&&record.canvas.parentElement!==record.host)record.host.appendChild(record.canvas);
     }
     const candidates=new Set<HTMLElement>(document.querySelectorAll<HTMLElement>(surfaces));
-    // Include every existing backdrop-filter surface, including dynamically mounted panels.
-    for(const element of document.querySelectorAll<HTMLElement>('main *,header *,aside *,dialog *')){
+    // Retain the original public styles; enhance all administration surfaces and portals.
+    for(const element of adminView?document.querySelectorAll<HTMLElement>('main *,header *,aside *,dialog *'):[]){
       if(!(element instanceof HTMLElement)||element.dataset.resourceGlass||element.classList.contains('resource-glass-canvas'))continue;
       if(element.closest('.site-preloader'))continue;
       const style=getComputedStyle(element);if((style.backdropFilter&&style.backdropFilter!=='none')||(style.boxShadow!=='none'&&style.backgroundImage!=='none'&&parseFloat(style.borderTopLeftRadius)>=6))candidates.add(element);
     }
     for(const host of candidates){
-      if(records.has(host)||host.matches('input[type=checkbox],input[type=radio],input[type=hidden],.liquid-select-native'))continue;
+      if(!keepGlass(host)||records.has(host)||host.matches('input[type=checkbox],input[type=radio],input[type=hidden],.liquid-select-native'))continue;
       const canvas=document.createElement('canvas'),context=canvas.getContext('2d');if(!context)continue;
       const native=host.matches('input,textarea,select');const style=getComputedStyle(host),position=host.style.position;
       if(!native&&style.position==='static')host.style.position='relative';
