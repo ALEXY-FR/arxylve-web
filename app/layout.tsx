@@ -4,6 +4,8 @@ import {LanguageProvider} from "../components/LanguageProvider";
 import {parseLanguage,preferredLanguage,languageTag} from "../data/languages";
 import type { Metadata } from "next";
 
+import {LiquidEffects} from "../components/LiquidEffects";
+import "./resource-glass.css";
 import {SitePreloader} from "../components/SitePreloader";
 import "./preloader.css";
 import { AmbientBackground } from "../components/AmbientBackground";
@@ -20,4 +22,4 @@ import {SiteProvider} from "../components/SiteProvider";
 import {readContent} from "../lib/cms-store";
 import {isAdmin} from "../lib/admin-auth";
 export const metadata: Metadata={ metadataBase:new URL("https://arxylve.com"), applicationName:"ARXYLVE", title:{default:"ARXYLVE — Atelier de design",template:"%s — ARXYLVE"}, description:"ARXYLVE, atelier de design fondé par Alexy Mekerke. Œuvres d’art, objets, mobilier et créations sur mesure." };
-export default async function RootLayout({children}:{children:React.ReactNode}){const [content,admin]=await Promise.all([readContent(),isAdmin()]);const [cookieJar,requestHeaders]=await Promise.all([cookies(),headers()]);const language=parseLanguage(cookieJar.get("arxylve-language")?.value)??preferredLanguage(requestHeaders.get("accept-language"));return <html lang={languageTag[language]}><body><SitePreloader/><AmbientBackground/><LanguageProvider initial={language}><SiteProvider initial={content} admin={admin}><a className="skip-link" href="#contenu"><SiteCopy id="Shared.skip" fallback="Aller au contenu"/></a><CartProvider><Header />{children}</CartProvider></SiteProvider></LanguageProvider></body></html>};
+export default async function RootLayout({children}:{children:React.ReactNode}){const [content,admin]=await Promise.all([readContent(),isAdmin()]);const [cookieJar,requestHeaders]=await Promise.all([cookies(),headers()]);const language=parseLanguage(cookieJar.get("arxylve-language")?.value)??preferredLanguage(requestHeaders.get("accept-language"));return <html lang={languageTag[language]}><body><LiquidEffects/><SitePreloader/><AmbientBackground/><LanguageProvider initial={language}><SiteProvider initial={content} admin={admin}><a className="skip-link" href="#contenu"><SiteCopy id="Shared.skip" fallback="Aller au contenu"/></a><CartProvider><Header />{children}</CartProvider></SiteProvider></LanguageProvider></body></html>};
