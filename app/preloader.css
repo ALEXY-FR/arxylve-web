@@ -14,7 +14,7 @@
 .preloader-aura-burgundy{background:#681b34;transform:translate(-35%,15%)}
 .preloader-aura-green{background:#214d39;transform:translate(40%,20%);animation-delay:-2s}
 .preloader-aura-blue{background:#1b2d58;transform:translate(0,-35%);animation-delay:-4s}
-.preloader-matter{position:absolute;inset:0;display:grid;place-items:center;animation:preloader-float 9s ease-in-out infinite;transition:transform 1400ms cubic-bezier(.22,.61,.36,1),filter 1400ms cubic-bezier(.22,.61,.36,1)}
+.preloader-matter{position:absolute;inset:0;display:grid;place-items:center;transform-origin:50% 50%;animation:preloader-expand 5s cubic-bezier(.42,0,.58,1) forwards;transition:filter 1400ms cubic-bezier(.22,.61,.36,1)}
 .preloader-glass{
   position:relative;width:clamp(190px,37vw,310px);height:clamp(210px,40vw,334px);overflow:hidden;
   border-radius:44% 56% 61% 39% / 38% 40% 60% 62%;border:1px solid #e1eef456;
@@ -32,13 +32,13 @@
 .preloader-reflection{position:absolute;inset:7% 13% 18% 9%;border-radius:43% 57% 63% 37% / 40% 34% 66% 60%;border-top:2px solid #f4faff88;border-left:1px solid #d1e6f847;transform:rotate(-18deg);filter:blur(.35px);mask-image:linear-gradient(135deg,#000,transparent 49%);-webkit-mask-image:linear-gradient(135deg,#000,transparent 49%)}
 .preloader-caustic{position:absolute;width:clamp(140px,27vw,225px);height:19px;top:calc(50% + clamp(135px,26vw,218px));border-radius:50%;background:linear-gradient(90deg,#681b341a,#a4bcd02b,#214d3920,#1b2d581a);filter:blur(9px);opacity:.6;animation:preloader-caustic 9s ease-in-out infinite}
 .site-preloader[data-phase="leaving"]{opacity:0;pointer-events:none}
-.site-preloader[data-phase="leaving"] .preloader-matter{transform:scale(1.14,1.08);filter:blur(8px);animation-play-state:paused}
+.site-preloader[data-phase="leaving"] .preloader-matter{filter:blur(8px)}
 .site-preloader[data-phase="leaving"] .preloader-wordmark{transition:opacity 1200ms cubic-bezier(.22,.61,.36,1);opacity:0}
 @keyframes preloader-emerge{from{opacity:0;transform:scale(.97);filter:blur(2px)}to{opacity:1;transform:scale(1);filter:blur(0)}}
-@keyframes preloader-morph{0%,100%{border-radius:44% 56% 61% 39% / 38% 40% 60% 62%;transform:rotate(-6deg)}50%{border-radius:57% 43% 38% 62% / 54% 61% 39% 46%;transform:rotate(5deg)}}
-@keyframes preloader-float{0%,100%{translate:0 5px}50%{translate:0 -6px}}
+@keyframes preloader-morph{0%,100%{border-radius:44% 56% 61% 39% / 38% 40% 60% 62%;transform:rotate(-2deg)}50%{border-radius:57% 43% 38% 62% / 54% 61% 39% 46%;transform:rotate(2deg)}}
+@keyframes preloader-expand{from{transform:scale(.76)}to{transform:scale(3.2)}}
 @keyframes preloader-flow{from{transform:translate(-8%,-3%) rotate(-15deg) scale(.95)}to{transform:translate(24%,18%) rotate(20deg) scale(1.2)}}
-@keyframes preloader-refract{0%,100%{transform:translate(-50%,-50%) rotate(6deg) scale(1.14,1.06) skewX(-5deg)}50%{transform:translate(-50%,-50%) rotate(-5deg) scale(1.2,1.1) skewX(4deg)}}
+@keyframes preloader-refract{0%,100%{transform:translate(-50%,-50%) rotate(2deg) scale(1.14,1.06) skewX(-5deg)}50%{transform:translate(-50%,-50%) rotate(-2deg) scale(1.2,1.1) skewX(4deg)}}
 @keyframes preloader-aura{from{opacity:.14;scale:.8}to{opacity:.27;scale:1.2}}
 @keyframes preloader-caustic{0%,100%{scale:1 .8;opacity:.6}50%{scale:.85 1;opacity:.35}}
 @keyframes preloader-failsafe{to{visibility:hidden;pointer-events:none}}
