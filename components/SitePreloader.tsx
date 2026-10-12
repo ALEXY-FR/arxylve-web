@@ -70,23 +70,27 @@ export function SitePreloader() {
 
   if (pathname !== '/' || phase === 'hidden') return null;
   return <>
-    <div className="site-preloader" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
-      <div className="preloader-scene" aria-hidden="true">
-        <div className="preloader-aura preloader-aura-burgundy"/>
-        <div className="preloader-aura preloader-aura-green"/>
-        <div className="preloader-aura preloader-aura-blue"/>
-        <span className="preloader-wordmark">ARXYLVE</span>
-        <div className="preloader-matter">
-          <div className="preloader-glass">
-            <span className="preloader-pigment preloader-pigment-burgundy"/>
-            <span className="preloader-pigment preloader-pigment-purple"/>
-            <span className="preloader-pigment preloader-pigment-green"/>
-            <span className="preloader-pigment preloader-pigment-blue"/>
-            <span className="preloader-refraction">ARXYLVE</span>
-            <span className="preloader-reflection"/>
+    <div className="site-preloader" data-variant="disc" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
+      <div className="preloader-disc-scene" aria-hidden="true">
+        <div className="preloader-disc-halo"/>
+        <div className="preloader-disc-wrap">
+          <div className="preloader-disc">
+            <svg className="preloader-disc-pattern" viewBox="170 170 684 684" fill="none" aria-hidden="true" focusable="false">
+              <rect x="-1024" y="-1024" width="3072" height="3072" fill="#4B1428"/>
+              <g className="preloader-disc-waves">
+                <path fill="#A12B56" d="M512,1012c-7.4,0-14.8-0.2-22.2-0.5C447.5,892,442,794.2,447.5,720.6c14-189.6,103.8-269.2,111.8-454.9 c4-93-13.9-178.5-41.7-253.7c55.9,0.6,109.6,10.4,159.7,27.9c22.2,68.2,35.6,144.1,32,225.8c-8,185.7-97.8,265.2-111.8,454.9 c-5.2,70.5-0.5,163.3,37.3,276.2l0,0C595.5,1006.7,554.4,1012,512,1012z"/>
+                <path fill="#C9366C" d="M634.8,996.8L634.8,996.8c-37.7-112.9-42.5-205.7-37.3-276.2c14-189.6,103.8-269.2,111.8-454.9 c3.5-81.7-9.9-157.6-32-225.8C743.1,63,802.7,99.5,852.7,146c5.9,38.2,8.4,78.2,6.6,119.7c-8,185.7-97.8,265.2-111.8,454.9 c-4.3,58.6-1.8,132.6,20.9,220.8C727.3,966,682.4,984.8,634.8,996.8z"/>
+                <path fill="#782040" d="M489.8,1011.5c-56.8-2.5-111-14.4-161.3-34.3l0,0c-32-104.1-35.9-190.2-31-256.7 c14-189.6,103.8-269.2,111.8-454.9c3.7-85.2-11-164.1-34.9-234.5C418.1,18.7,464.3,12,512,12c1.9,0,3.7,0,5.6,0 c27.8,75.2,45.7,160.7,41.7,253.7c-8,185.7-97.8,265.2-111.8,454.9C442,794.2,447.5,892,489.8,1011.5z"/>
+                <path fill="#4B1428" d="M328.5,977.2C143.1,904.1,12,723.3,12,512C12,283.6,165.2,91,374.4,31.2c23.9,70.4,38.6,149.3,34.9,234.5 c-8,185.7-97.8,265.2-111.8,454.9C292.6,787,296.5,873.2,328.5,977.2z"/>
+                <path fill="#F24182" d="M1012,512c0,182.4-97.7,342-243.7,429.4c-22.7-88.1-25.2-162.1-20.9-220.8c14-189.6,103.8-269.2,111.8-454.9 c1.8-41.5-0.8-81.5-6.6-119.7C950.7,237.3,1012,367.5,1012,512z"/>
+              </g>
+            </svg>
+            <span className="preloader-disc-sheen"/>
+            <span className="preloader-disc-rim"/>
           </div>
-          <span className="preloader-caustic"/>
         </div>
+        <span className="preloader-disc-shadow"/>
+        <span className="preloader-disc-wordmark">ARXYLVE</span>
       </div>
     </div>
     <noscript><style>{'.site-preloader{display:none!important}'}</style></noscript>
