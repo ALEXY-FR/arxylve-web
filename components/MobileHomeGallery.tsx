@@ -57,7 +57,7 @@ export function MobileHomeGallery(){
   onPointerUp={event=>{const origin=start.current;start.current=null;if(!origin?.mouse||!dragged.current)return;const node=event.currentTarget;node.style.removeProperty('scroll-snap-type');const delta=origin.x-event.clientX,index=Math.max(0,Math.min(count-1,Math.round(origin.left/node.clientWidth)+(Math.abs(delta)>35?Math.sign(delta):0)));node.scrollTo({left:index*node.clientWidth,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}}
   onPointerCancel={event=>{start.current=null;dragged.current=true;event.currentTarget.style.removeProperty('scroll-snap-type');}}
   onKeyDown={event=>{if(event.target!==event.currentTarget||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)||!rail.current||!count)return;event.preventDefault();const node=rail.current,index=(Math.round(node.scrollLeft/node.clientWidth)+(['ArrowRight','ArrowDown'].includes(event.key)?1:-1)+count)%count;node.scrollTo({left:index*node.clientWidth,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}}>
-  <h1 className="sr-only">{t('HomeGallery.3','Sculptures miroir ARXYLVE')}</h1>
+  <h1 className="sr-only">{t('HomeGallery.3','ARXYLVE — Atelier de design')}</h1>
   {content.sculptures.map((item,index)=><article className="mobile-home-work" key={item.slug}><MobileWorkCard item={item} playing={visible&&active===index} first={index===0} suppressClick={suppressClick}/></article>)}
   {!count&&<p>{t('HomeGallery.1','La collection se prépare.')}</p>}
  </div>;

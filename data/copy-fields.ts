@@ -57,7 +57,7 @@ export const copyFields=[
     "id": "HomeGallery.3",
     "source": "HomeGallery",
     "kind": "text",
-    "fallback": "Sculptures miroir ARXYLVE"
+    "fallback": "ARXYLVE — Atelier de design"
   },
   {
     "id": "HomeGallery.4",

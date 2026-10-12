@@ -18,6 +18,8 @@ Aller au contenu|Skip to content|跳转到内容|Ir al contenido|Ir para o conte
 Fermer|Close|关闭|Cerrar|Fechar|Schließen|Chiudi|閉じる
 Menu|Menu|菜单|Menú|Menu|Menü|Menu|メニュー
 La collection se prépare.|The collection is taking shape.|作品集正在筹备中。|La colección está tomando forma.|A coleção está a ganhar forma.|Die Kollektion entsteht.|La collezione sta prendendo forma.|コレクションを準備しています。
+Atelier de design|Design studio|设计工作室|Estudio de diseño|Atelier de design|Designatelier|Studio di design|デザインスタジオ
+ARXYLVE — Atelier de design|ARXYLVE — Design studio|ARXYLVE — 设计工作室|ARXYLVE — Estudio de diseño|ARXYLVE — Atelier de design|ARXYLVE — Designatelier|ARXYLVE — Studio di design|ARXYLVE — デザインスタジオ
 Sculptures miroir ARXYLVE|ARXYLVE mirror sculptures|ARXYLVE 镜面雕塑|Esculturas espejo ARXYLVE|Esculturas espelho ARXYLVE|Spiegelskulpturen von ARXYLVE|Sculture specchio ARXYLVE|ARXYLVEのミラー彫刻
 Édition|Edition|版次|Edición|Edição|Edition|Edizione|エディション
 Dimensions|Dimensions|尺寸|Dimensiones|Dimensões|Maße|Dimensioni|サイズ
