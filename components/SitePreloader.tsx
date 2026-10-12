@@ -11,6 +11,9 @@ export function SitePreloader() {
   useEffect(() => {
     if (pathname !== '/' || phase !== 'loading') return;
     let cancelled = false;
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let assetsReady = false;
+    let minimumElapsed = reducedMotion;
     const controller = new AbortController();
     const targets = Array.from(document.querySelectorAll<HTMLElement>('.site-header, #contenu, .skip-link'));
     const previous = targets.map(element => element.inert);
@@ -18,11 +21,19 @@ export function SitePreloader() {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
-    function finish() {
-      if (!cancelled) setPhase('leaving');
+    function revealIfReady() {
+      if (!cancelled && assetsReady && minimumElapsed) setPhase('leaving');
     }
+    function finish() {
+      assetsReady = true;
+      revealIfReady();
+    }
+    const opening = window.setTimeout(() => {
+      minimumElapsed = true;
+      revealIfReady();
+    }, reducedMotion ? 0 : 3600);
     // A failed asset must never trap the visitor behind the opening screen.
-    const deadline = window.setTimeout(finish, 3500);
+    const deadline = window.setTimeout(finish, 6000);
     const frame = requestAnimationFrame(() => {
       const candidates = Array.from(document.querySelectorAll<HTMLImageElement | HTMLVideoElement>('.gallery-media img, .tablet-main-photo img, .tablet-main-photo video, .mobile-home-work:first-of-type img, .mobile-home-work:first-of-type video'));
       const first = candidates.find(element => {
@@ -42,6 +53,7 @@ export function SitePreloader() {
     return () => {
       cancelled = true;
       clearTimeout(deadline);
+      clearTimeout(opening);
       cancelAnimationFrame(frame);
       controller.abort();
       targets.forEach((element, index) => { element.inert = previous[index]; });
@@ -51,7 +63,7 @@ export function SitePreloader() {
 
   useEffect(() => {
     if (phase !== 'leaving') return;
-    const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 140 : 850;
+    const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 140 : 1400;
     const timer = setTimeout(() => setPhase('hidden'), duration);
     return () => clearTimeout(timer);
   }, [phase]);
