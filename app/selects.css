@@ -10,7 +10,7 @@
 .liquid-select-panel{position:fixed;z-index:1000;display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid #aebbd35a;border-radius:24px;background:linear-gradient(145deg,#273042d9,#141822e8 55%,#10141ed9);backdrop-filter:blur(30px) saturate(1.35);box-shadow:inset 0 1px 1px #e6e8ed18,0 20px 60px #0009;color:#edf0f6;overflow:hidden;animation:select-arrive .16s ease-out;font-family:var(--display)}
 .liquid-select-search{flex:none;width:100%;min-height:44px;padding:10px 12px;border:1px solid #9ba8be40;border-radius:14px;background:#070d1680;color:inherit;font:inherit;font-size:16px}
 .liquid-select-search:focus{outline:1px solid #baacc166;outline-offset:0}
-.liquid-select-options{overflow-y:auto;overscroll-behavior:contain;min-height:0;scrollbar-width:thin;scrollbar-color:#79839a66 transparent}
+.liquid-select-options{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;min-height:0;scrollbar-width:thin;scrollbar-color:#79839a66 transparent}
 .liquid-select-options button{width:100%;display:flex;align-items:center;gap:10px;border:1px solid transparent;background:transparent;color:inherit;border-radius:14px;padding:11px 12px;min-height:44px;text-align:left;font:inherit;font-size:14px;line-height:1.35}
 .liquid-select-options button[data-active=true]{background:#ffffff0b;border-color:#ffffff16}
 .liquid-select-options button[aria-selected=true]{background:linear-gradient(135deg,#6424488a,#1b2d5870);border-color:#a190a955}
