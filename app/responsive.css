@@ -265,7 +265,7 @@ main,section,form,.split-page>*,.detail-grid>*,.cart-layout>*{min-width:0}
 
 /* A centred filmstrip selects media as it scrolls, without moving the page. */
 .media-gallery>.media-choice-rail{scroll-snap-type:x mandatory;overscroll-behavior-x:contain;direction:ltr}
-.media-choice-rail button{--thumb-width:max(44px,calc(68px * var(--thumb-ratio,1)));width:var(--thumb-width);aspect-ratio:var(--thumb-ratio,1);scroll-snap-align:center;scroll-snap-stop:always}
+.media-choice-rail button{--thumb-width:max(44px,calc(58px * var(--thumb-ratio,1) + 10px));width:var(--thumb-width);aspect-ratio:var(--thumb-ratio,1);scroll-snap-align:center;scroll-snap-stop:always}
 .media-choice-rail button:first-child{margin-left:max(0px,calc(50% - var(--thumb-width)/2 - 8px))}
 .media-choice-rail button:last-child{margin-right:max(0px,calc(50% - var(--thumb-width)/2 - 8px))}
 .media-gallery .fitted-artwork-media[data-cropped=true] video{object-fit:cover}
@@ -277,3 +277,13 @@ main,section,form,.split-page>*,.detail-grid>*,.cart-layout>*{min-width:0}
 
 /* Keep swipe and wheel selection while hiding native scrollbar buttons. */
 .media-choice-rail::-webkit-scrollbar,.media-choice-rail::-webkit-scrollbar-button{display:none;width:0;height:0}
+
+/* Concentric corners: each inner radius follows the frame's border and inset. */
+.detail-grid>.media-gallery{--artwork-frame-radius:30px;--artwork-thumb-radius:14px}
+.detail-grid>.media-gallery .fitted-artwork-frame{border-radius:var(--artwork-frame-radius)}
+.detail-grid>.media-gallery .fitted-artwork-media{border-radius:calc(var(--artwork-frame-radius) - var(--mobile-artwork-inset,12px) - 1px);overflow:hidden}
+.detail-grid>.media-gallery .fitted-artwork-media>img,.detail-grid>.media-gallery .fitted-artwork-media>video{border-radius:0}
+.detail-grid>.media-gallery .media-choice-rail button{border-radius:var(--artwork-thumb-radius)}
+.detail-grid>.media-gallery .media-thumb-window{position:absolute;inset:4px;overflow:hidden;border-radius:calc(var(--artwork-thumb-radius) - 5px)}
+.detail-grid>.media-gallery .media-thumb-window>img,.detail-grid>.media-gallery .media-thumb-window>video{border-radius:0;object-fit:contain}
+@media(max-width:767px){.detail-grid>.media-gallery{--artwork-frame-radius:28px}}
