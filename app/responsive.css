@@ -281,9 +281,12 @@ main,section,form,.split-page>*,.detail-grid>*,.cart-layout>*{min-width:0}
 /* Concentric corners: each inner radius follows the frame's border and inset. */
 .detail-grid>.media-gallery{--artwork-frame-radius:30px;--artwork-thumb-radius:14px}
 .detail-grid>.media-gallery .fitted-artwork-frame{border-radius:var(--artwork-frame-radius)}
-.detail-grid>.media-gallery .fitted-artwork-media{border-radius:calc(var(--artwork-frame-radius) - var(--mobile-artwork-inset,12px) - 1px);overflow:hidden}
+.detail-grid>.media-gallery .fitted-artwork-media{--artwork-media-radius:calc(var(--artwork-frame-radius) - var(--mobile-artwork-inset,12px) - 1px);border-radius:var(--artwork-media-radius);overflow:hidden}
 .detail-grid>.media-gallery .fitted-artwork-media>img,.detail-grid>.media-gallery .fitted-artwork-media>video{border-radius:0}
 .detail-grid>.media-gallery .media-choice-rail button{border-radius:var(--artwork-thumb-radius)}
 .detail-grid>.media-gallery .media-thumb-window{position:absolute;inset:4px;overflow:hidden;border-radius:calc(var(--artwork-thumb-radius) - 5px)}
 .detail-grid>.media-gallery .media-thumb-window>img,.detail-grid>.media-gallery .media-thumb-window>video{border-radius:0;object-fit:contain}
 @media(max-width:767px){.detail-grid>.media-gallery{--artwork-frame-radius:28px}}
+
+/* Explicitly clip the enlarged native video layer to the media window. */
+.detail-grid>.media-gallery .fitted-artwork-media[data-video=true]{clip-path:inset(0 round var(--artwork-media-radius));isolation:isolate;transform:translateZ(0)}
