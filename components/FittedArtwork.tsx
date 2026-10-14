@@ -8,7 +8,7 @@ type Media={src:string;alt:string;video?:boolean;format?:MediaFormat};
 function displayRatio(media:Media,natural:number){return media.video?mediaRatio(media.format,natural):natural;}
 export function FittedArtwork({image,alt,photos,videos}:{image:string;alt:string;photos?:Media[];videos?:Media[]}){
  const t=useCopy(),host=useRef<HTMLDivElement>(null),rail=useRef<HTMLDivElement>(null),player=useRef<HTMLVideoElement>(null);
- const [space,setSpace]=useState({width:0,height:0}),[ratios,setRatios]=useState<Record<string,number>>({}),[crops,setCrops]=useState<Record<string,VideoCrop>>({}),[active,setActive]=useState(0),[hovered,setHovered]=useState(false),[keyboard,setKeyboard]=useState(false),[failed,setFailed]=useState(false);
+ const [space,setSpace]=useState({width:0,height:0,padding:13}),[ratios,setRatios]=useState<Record<string,number>>({}),[crops,setCrops]=useState<Record<string,VideoCrop>>({}),[active,setActive]=useState(0),[hovered,setHovered]=useState(false),[keyboard,setKeyboard]=useState(false),[failed,setFailed]=useState(false);
  const activeIndex=useRef(0),programmatic=useRef(false),settleTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
  const views=useMemo<Media[]>(()=>[{src:image,alt},...(photos??[]),...(videos??[]).map(v=>({...v,video:true}))],[image,alt,photos,videos]);
  const selected=views[active]??views[0],multiple=views.length>1,natural=ratios[selected.src]??1,crop=crops[selected.src]??fullVideo,ratio=displayRatio(selected,natural*crop.width/crop.height),cropped=!!selected.video&&!!selected.format&&selected.format!=='original';
@@ -35,7 +35,7 @@ export function FittedArtwork({image,alt,photos,videos}:{image:string;alt:string
   node.scrollTo({left:node.scrollLeft+item.left+item.width/2-box.left-box.width/2,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
   settleTimer.current=setTimeout(()=>{programmatic.current=false;},700);
  },[select]);
- useEffect(()=>{const node=host.current;if(!node)return;const observer=new ResizeObserver(([entry])=>setSpace({width:entry.contentRect.width,height:entry.contentRect.height}));observer.observe(node);return()=>observer.disconnect();},[]);
+ useEffect(()=>{const node=host.current;if(!node)return;const observer=new ResizeObserver(([entry])=>setSpace({width:entry.contentRect.width,height:entry.contentRect.height,padding:(parseFloat(getComputedStyle(node).getPropertyValue('--mobile-artwork-inset'))||12)+1}));observer.observe(node);return()=>observer.disconnect();},[]);
  useEffect(()=>{
   const node=rail.current;if(!node)return;let wheel=0,lastStep=0,frame=0;
   const nearest=()=>{if(programmatic.current)return;const box=node.getBoundingClientRect(),center=box.left+box.width/2;let closest=0,distance=Infinity;
@@ -61,7 +61,7 @@ export function FittedArtwork({image,alt,photos,videos}:{image:string;alt:string
   const sample=setTimeout(()=>readBorders(video),600);video.addEventListener('canplay',sync);document.addEventListener('visibilitychange',sync);sync();
   return()=>{clearTimeout(sample);observer.disconnect();video.removeEventListener('canplay',sync);document.removeEventListener('visibilitychange',sync);video.pause();};
  },[selected.src,selected.video,readBorders]);
- const padding=13,width=Math.max(26,Math.min(space.width,(space.height-padding*2)*ratio+padding*2)),height=(width-padding*2)/ratio+padding*2;
+ const padding=space.padding,width=Math.max(26,Math.min(space.width,(space.height-padding*2)*ratio+padding*2)),height=(width-padding*2)/ratio+padding*2;
  return <div className="fitted-artwork-host media-gallery" data-multiple={multiple} data-tray={hovered||keyboard}
  onPointerEnter={e=>{if(e.pointerType==='mouse')setHovered(true);}} onPointerLeave={()=>setHovered(false)} onPointerDown={()=>setKeyboard(false)} onFocus={e=>{if(e.target.matches(':focus-visible'))setKeyboard(true);}} onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node))setKeyboard(false);}}>
  <div ref={host} className="artwork-viewer"><div className="fitted-artwork-frame" tabIndex={0} aria-label={t('FittedArtwork.1','Photos de l’œuvre')} style={{...(space.width?{width,height}:{}),'--media-ratio':ratio} as CSSProperties}>
