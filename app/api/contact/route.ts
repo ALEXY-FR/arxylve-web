@@ -1,3 +1,8 @@
+import {randomBytes} from 'node:crypto';
+import {cookies} from 'next/headers';
+import {readJsonBody,RequestError} from '../../../lib/request-body';
+import {consumeLimit,requesterAddress} from '../../../lib/request-limits';
+import {secureAdminCookies} from '../../../lib/request-origin';
 import {findArtwork} from '../../../data/artwork-slugs';
 import {isTrustedContactBrowser,sameOrigin} from "../../../lib/admin-auth";
 import {formatContactEmail} from "../../../lib/contact-email";
@@ -41,20 +46,16 @@ function decodePassword(encodedPassword: string) {
 }
 
 export async function POST(request: Request) {
- const {sculptures}=await readContent();
+ if(!sameOrigin(request))return NextResponse.json({message:"Demande invalide."},{status:403});
+ const address=requesterAddress(request);
   let payload: ContactPayload;
 
   try {
-    payload = (await request.json()) as ContactPayload;
-  } catch {
-    return NextResponse.json(
-      {
-        message: "Demande invalide.",
-      },
-      {
-        status: 400,
-      },
-    );
+    await consumeLimit('contact-attempt',address,{limit:20,windowMs:10*60000});
+    payload=await readJsonBody<ContactPayload>(request,65536);
+  } catch(error) {
+    const known=error instanceof RequestError;
+    return NextResponse.json({message:known&&error.status===413?"Demande invalide.":"L’envoi est momentanément indisponible. Réessayez dans un instant."},{status:known?error.status:503,headers:known&&error.retryAfter?{'Retry-After':String(error.retryAfter)}:{}});
   }
 
   /*
@@ -77,6 +78,7 @@ export async function POST(request: Request) {
   const message = clean(payload.message, 5000);
   const acquisition=payload.selection !== undefined;
   const artworkLines:string[]=[];
+  const {sculptures}=await readContent();
   if (payload.selection !== undefined) {
     if (!Array.isArray(payload.selection) || !payload.selection.length || payload.selection.length > 50) return NextResponse.json({message:"Sélection invalide."},{status:400});
     const seen = new Set<string>();
@@ -115,6 +117,14 @@ export async function POST(request: Request) {
   }
 
 
+
+  const ownerTest=await isTrustedContactBrowser();
+  try{
+    await consumeLimit('contact-hour',address,{limit:ownerTest?40:8,windowMs:3600000});
+    await consumeLimit('contact-day',address,{limit:ownerTest?120:20,windowMs:86400000});
+  }catch(error){return NextResponse.json({message:"L’envoi est momentanément indisponible. Réessayez dans un instant."},{status:error instanceof RequestError?error.status:503,headers:error instanceof RequestError&&error.retryAfter?{'Retry-After':String(error.retryAfter)}:{}});}
+  const jar=await cookies();let requester=jar.get('arxylve-contact')?.value;
+  if(!requester||!/^[a-f0-9]{64}$/.test(requester)){requester=randomBytes(32).toString('hex');jar.set('arxylve-contact',requester,{httpOnly:true,sameSite:'strict',secure:secureAdminCookies(request),path:'/api/contact',maxAge:7*86400});}
 
   const host = process.env.OVH_SMTP_HOST;
   const port = Number(process.env.OVH_SMTP_PORT ?? "587");
@@ -176,10 +186,10 @@ export async function POST(request: Request) {
     },
   });
 
-  const ownerTest=sameOrigin(request)&&await isTrustedContactBrowser();
+
   let reservation: string | null = null;
   
-  try { reservation = await reserveContact(email, phone, {firstName,lastName,email,phone,category,dimensions:acquisition?"":dimensions,message,acquisition,artworks:artworkLines}, ownerTest); }
+  try { reservation = await reserveContact(email, phone, {firstName,lastName,email,phone,category,dimensions:acquisition?"":dimensions,message,acquisition,artworks:artworkLines}, ownerTest, requester); }
   catch { return NextResponse.json({ message: "Le suivi des demandes est temporairement indisponible. Réessayez dans un instant." }, { status: 503 }); }
   if (!reservation) return NextResponse.json({ message: "Vous avez déjà envoyé deux demandes en attente. Merci d’attendre notre réponse avant de nous écrire à nouveau." }, { status: 429 });
 

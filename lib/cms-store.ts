@@ -4,7 +4,7 @@ import {normalizeBlueMirrorContent} from '../data/blue-mirror';
 import {validateTextLayouts} from '../data/text-layout';
 import {validateTranslations} from '../data/localized-content';
 import {mkdir,readFile,writeFile,rename} from 'node:fs/promises';import path from 'node:path';import {randomUUID} from 'node:crypto';import {initialContent,type SiteContent} from '../data/content';import {statusLabels} from '../data/sculptures';
-export const cmsDir=path.join(process.cwd(),'.arxylve-private','cms');
+export const cmsDir=process.env.ARXYLVE_CMS_DIR||path.join(process.cwd(),'.arxylve-private','cms');
 export async function readJson<T>(name:string,fallback:T):Promise<T>{try{return JSON.parse(await readFile(path.join(/*turbopackIgnore: true*/ cmsDir,name),'utf8'))}catch(e){if((e as NodeJS.ErrnoException).code==='ENOENT')return fallback;throw e}}
 export async function atomicJson(name:string,value:unknown){await mkdir(cmsDir,{recursive:true});const target=path.join(/*turbopackIgnore: true*/ cmsDir,name),temp=target+'.'+randomUUID()+'.tmp';await writeFile(temp,JSON.stringify(value,null,2),{mode:0o600});await rename(temp,target)}
 export async function readContent(){const saved=await readJson<SiteContent>('content.json',initialContent);return normalizeMediaFormats(normalizeArtworkSlugs(normalizeBlueMirrorContent({...saved,texts:{...initialContent.texts,...saved.texts}})))}

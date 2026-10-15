@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 function invite(origin,project=process.cwd()){
  const url=new URL(origin);
  if(url.username||url.password||url.search||url.hash||url.pathname!=='/'||(url.protocol!=='https:'&&!(url.protocol==='http:'&&['localhost','127.0.0.1','[::1]'].includes(url.hostname))))throw Error('Indiquez uniquement l’origine HTTPS du site, par exemple https://arxylve.com.');
- const dir=path.join(project,'.arxylve-private','cms');fs.mkdirSync(dir,{recursive:true,mode:0o700});
+ const dir=process.env.ARXYLVE_CMS_DIR||path.join(project,'.arxylve-private','cms');fs.mkdirSync(dir,{recursive:true,mode:0o700});
  const configured=fs.existsSync(path.join(dir,'credentials.json'));
  const token=crypto.randomBytes(32).toString('hex'),expires=Date.now()+15*60*1000;
  const record={hash:crypto.createHash('sha256').update(token).digest('hex'),expires};
