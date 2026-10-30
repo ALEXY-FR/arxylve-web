@@ -1,11 +1,15 @@
 "use client";
 import {useEffect,useRef} from "react";
+import {usePathname} from 'next/navigation';
 import {palette} from "../data/palette";
 
 const initialTones=[0,2,1,3,0];
 export function AmbientBackground(){
   const field=useRef<HTMLDivElement>(null);
+  const pathname=usePathname();
+  const isAdmin=pathname==='/admin'||pathname.startsWith('/admin/');
   useEffect(()=>{
+    if(isAdmin)return;
     const media=matchMedia('(prefers-reduced-motion: reduce)');
     const active=new WeakMap<HTMLElement,number>();
     let timer:ReturnType<typeof setInterval>|undefined;
@@ -31,7 +35,7 @@ export function AmbientBackground(){
     }
     update();media.addEventListener('change',update);document.addEventListener('visibilitychange',update);
     return()=>{if(timer)clearInterval(timer);media.removeEventListener('change',update);document.removeEventListener('visibilitychange',update);};
-  },[]);
+  },[isAdmin]);
   return <div ref={field} className="ambient-background stable-ambient" aria-hidden="true">
     {initialTones.map((tone,index)=><div className="ambient-blob" key={index}>
       {[0,1].map(layer=><span key={layer} className="ambient-blob-color" style={{backgroundColor:'rgb('+palette[tone].rgb+')',opacity:layer===0?1:0}}/>)}

@@ -41,7 +41,7 @@ export function UploadProgress({progress,dismiss}:{progress:Progress|null;dismis
  return <aside className={styles.panel} aria-label="Téléversement des médias" role={failed?'alert':'status'} aria-live="polite" aria-atomic="true">
   <div className={styles.heading}>{finished?<span aria-hidden="true">{done?'✓':'!'}</span>:<span className={styles.spinner} aria-hidden="true"/>}<strong>{done?'Téléversement terminé':failed?'Téléversement non terminé':progress.phase==='prepare'?'Préparation du média…':'Téléversement en cours…'}</strong></div>
   {!finished&&<><p className={styles.filename}>{progress.name} · {progress.index}/{progress.total}</p><progress aria-label="Progression du fichier" max={100} value={progress.phase==='transfer'?progress.percent:undefined}/><p>{progress.phase==='transfer'?progress.percent+' % envoyé':'Fichier reçu. Patientez pendant sa préparation pour le site.'}</p><small>Gardez cette page ouverte jusqu’à la confirmation.</small></>}
-  {done&&<p>{progress.total} média{progress.total>1?'s':''} prêt{progress.total>1?'s':''}. Cliquez sur ARXYLVE pour enregistrer et publier vos changements.</p>}
+  {done&&<p>{progress.total} média{progress.total>1?'s':''} prêt{progress.total>1?'s':''}. Cliquez sur Enregistrer pour publier vos changements.</p>}
   {failed&&<p>{progress.error}</p>}
   {finished&&<button type="button" onClick={dismiss}>Fermer</button>}
  </aside>;
