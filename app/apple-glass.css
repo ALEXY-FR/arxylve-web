@@ -68,3 +68,13 @@
 }
 @media(hover:hover) and (prefers-reduced-motion:no-preference){.button:hover:not(:disabled)::after,.masonry-card:hover .masonry-inner::after{animation:price-liquid-reflection 2.8s ease-in-out infinite}}
 @media(prefers-reduced-motion:no-preference){.button:focus-visible::after,.masonry-card:focus-within .masonry-inner::after{animation:price-liquid-reflection 2.8s ease-in-out infinite}}
+
+/* Purchase actions and basket details. */
+@media(hover:hover){.button.purchase-action:hover:not(:disabled){color:#f3fff8;border-color:#69c997;background:linear-gradient(145deg,#2b8759c9,#174d3abb);box-shadow:inset 0 1px 3px #dcffe052,inset 0 -2px 12px #3c9b6c66,0 8px 24px #13472f66}}
+.acquisition-submit{margin-top:10px}
+body .cart-selection .cart-total>span{font-size:var(--type-medium)!important;line-height:1.3}
+.cart-selection .cart-total{background:linear-gradient(140deg,#642448bb,#1b2d58aa);border-color:transparent;box-shadow:inset 0 1px 2px #ffffff50,0 8px 20px #0004}
+.delivery-option,.delivery-option[aria-pressed=true],.delivery-option:hover{border-color:transparent;outline-offset:3px}
+.delivery-status{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:5px 12px;border-radius:999px;border:1px solid #ffffff2b;background:linear-gradient(145deg,#ffffff26,#ffffff09);box-shadow:inset 0 1px 2px #ffffff40,0 3px 10px #0003;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#f3eff4}
+.cart-selection button.delivery-option,.cart-selection button.delivery-option:hover,.cart-selection button.delivery-option[aria-pressed=true]{border-color:transparent}
+.cart-selection button.delivery-option[aria-pressed=true]{box-shadow:inset 0 1px 2px #a8789930,0 8px 20px #0004}
