@@ -127,3 +127,9 @@ form .delivery-option>.delivery-status{justify-self:end;white-space:nowrap}
 form .delivery-option :is(.delivery-label,strong,.delivery-status){font-size:clamp(12px,1.1vw,15px)!important}
 @media(max-width:1100px){form .delivery-option .delivery-label-full{display:none}form .delivery-option .delivery-label-short{display:inline}}
 @media(max-width:600px){form .delivery-option :is(.delivery-label,strong,.delivery-status){font-size:clamp(11px,3vw,14px)!important}}
+/* Fixed status width keeps the delivery price stationary. */
+form .delivery-option>.delivery-status{width:112px}
+@media(max-width:600px){form .delivery-option>.delivery-status{width:94px}}
+@media(pointer:fine){html,body{cursor:url('/glass-cursor.svg') 4 2,auto}body :is(a,button,select,summary){cursor:url('/glass-cursor.svg') 4 2,pointer}.button.purchase-action:disabled{cursor:url('/glass-cursor.svg') 4 2,default}}
+@media(max-width:600px){form .delivery-option>.delivery-status{width:82px}}
+@media(pointer:fine){body :is(a,button,select,summary):not(:disabled){cursor:url('/glass-cursor.svg') 4 2,pointer!important}}
