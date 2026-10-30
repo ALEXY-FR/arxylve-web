@@ -47,3 +47,12 @@
  .site-header .admin-shortcut{order:3}
 }
 @media(prefers-reduced-motion:reduce){.glass-menu-toggle span{transition:none}}
+
+/* A travelling reflection on interactive glass and selected works. */
+.site-header .brand-button,.site-header .desktop-nav a,.social-links .social-icon,.cart-selection .cart-item{position:relative;isolation:isolate;overflow:hidden}
+.site-header .brand-button::after,.site-header .desktop-nav a::after,.social-links .social-icon::after,.cart-selection .cart-item::after{content:"";position:absolute;inset:-100% -45%;z-index:2;pointer-events:none;opacity:0;border-radius:45%;background:linear-gradient(115deg,transparent 35%,#6679a408 42%,#e2e6ef52 49%,#354f891a 55%,transparent 65%);filter:blur(5px);transform:translateX(-45%) rotate(-8deg)}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.site-header .brand-button:hover,.site-header .desktop-nav a:hover,.social-links .social-icon:hover{transform:none}.site-header .brand-button:hover::after,.site-header .desktop-nav a:hover::after,.social-links .social-icon:hover::after,.cart-selection .cart-item:hover::after{animation:price-liquid-reflection 2.8s ease-in-out infinite}}
+@media(prefers-reduced-motion:no-preference){.site-header .brand-button:focus-visible::after,.site-header .desktop-nav a:focus-visible::after,.social-links .social-icon:focus-visible::after,.cart-selection .cart-item:focus-within::after{animation:price-liquid-reflection 2.8s ease-in-out infinite}}
+.delivery-option{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:16px 18px;text-align:left;color:inherit;border:1px solid var(--glass-edge);border-radius:var(--cart-inner-radius,26px);background:var(--glass-surface);box-shadow:var(--glass-shadow);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.delivery-option>span:first-child{flex:1}.delivery-option strong{white-space:nowrap}.delivery-status{font-size:.8em;white-space:nowrap;color:#d9d2e3}.delivery-option[aria-pressed=true]{border-color:#bca3bc;background:linear-gradient(140deg,#642448bb,#1b2d58aa);box-shadow:inset 0 1px 2px #ffffff50,0 8px 20px #0004}
+@media(max-width:600px){.delivery-option{flex-wrap:wrap}.delivery-option>span:first-child{flex-basis:65%}}
