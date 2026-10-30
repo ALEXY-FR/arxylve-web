@@ -26,3 +26,24 @@
  .mobile-work-card .mobile-work-image,.mobile-work-card .mobile-home-slide,.mobile-work-card .mobile-work-info{border-radius:calc(var(--mobile-radius) - var(--mobile-inset) - 1px)}
 }
 @media(prefers-reduced-motion:reduce){.site-header a:active,.button:active,.social-icon:active,.slideshow-controls button:active{transform:none}}
+
+/* Navigation and compact glass menu */
+.site-header{display:flex;align-items:center;justify-content:space-between}
+.navigation-group{margin-left:auto;position:relative;display:flex;align-items:center}
+.site-header .desktop-nav{margin:0}
+.glass-menu-toggle{display:none}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.site-header .desktop-nav a:hover{transform:none}}
+@media(max-width:1024px){
+ .site-header{display:flex;min-height:76px;height:auto;padding:10px var(--gutter);gap:10px}
+ .navigation-group{position:relative;margin-left:auto;order:2}
+ .glass-menu-toggle{display:flex;flex-direction:column;justify-content:center;gap:5px;width:52px;height:48px;padding:12px 14px;border:1px solid var(--glass-edge);border-radius:18px;color:inherit;background:var(--glass-surface);box-shadow:var(--glass-shadow);backdrop-filter:blur(24px) saturate(155%);-webkit-backdrop-filter:blur(24px) saturate(155%)}
+ .glass-menu-toggle span{display:block;width:100%;height:2px;background:currentColor;border-radius:2px;transition:transform .2s,opacity .2s}
+ .glass-menu-toggle[aria-expanded=true] span:first-child{transform:translateY(7px) rotate(45deg)}
+ .glass-menu-toggle[aria-expanded=true] span:nth-child(2){opacity:0}
+ .glass-menu-toggle[aria-expanded=true] span:last-child{transform:translateY(-7px) rotate(-45deg)}
+ .site-header .desktop-nav{display:none;position:absolute;top:calc(100% + 10px);right:0;left:auto;z-index:30;grid-column:auto;order:initial;width:min(280px,calc(100vw - 24px));padding:7px;border:1px solid var(--glass-edge);border-radius:25px;background:linear-gradient(145deg,rgba(47,52,65,.96),rgba(12,16,25,.97));box-shadow:var(--glass-shadow);backdrop-filter:blur(26px) saturate(155%);-webkit-backdrop-filter:blur(26px) saturate(155%)}
+ .site-header .desktop-nav[data-open=true]{display:flex;flex-direction:column;align-items:stretch;gap:3px}
+ .site-header .desktop-nav a{display:flex;justify-content:flex-start;min-height:46px;width:100%;padding:10px 15px;font-size:16px!important;border-radius:17px}
+ .site-header .admin-shortcut{order:3}
+}
+@media(prefers-reduced-motion:reduce){.glass-menu-toggle span{transition:none}}

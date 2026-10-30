@@ -27,7 +27,7 @@ type ContactPayload = {
   category?: string;
   dimensions?: string;
   message?: string;
-  consent?: string;
+  handDelivery?: boolean;
   website?: string;
 };
 
@@ -76,6 +76,7 @@ export async function POST(request: Request) {
   const category = clean(payload.category, 120);
   const dimensions = clean(payload.dimensions, 240);
   const message = clean(payload.message, 5000);
+  const messageWithDelivery = message + (payload.handDelivery === true ? "\n\nLivraison en main propre par Alexy souhaitée : 1 000 €." : "\n\nLivraison en main propre par Alexy non demandée.");
   const acquisition=payload.selection !== undefined;
   const artworkLines:string[]=[];
   const {sculptures}=await readContent();
@@ -101,8 +102,7 @@ export async function POST(request: Request) {
     normalizeEmail(payload.confirmEmail) !== email ||
     !category ||
     (!acquisition && !dimensions) ||
-    message.length < 20 ||
-    payload.consent !== "accepted";
+    message.length < 20;
 
   if (formIsInvalid) {
     return NextResponse.json(
@@ -189,7 +189,7 @@ export async function POST(request: Request) {
 
   let reservation: string | null = null;
   
-  try { reservation = await reserveContact(email, phone, {firstName,lastName,email,phone,category,dimensions:acquisition?"":dimensions,message,acquisition,artworks:artworkLines}, ownerTest, requester); }
+  try { reservation = await reserveContact(email, phone, {firstName,lastName,email,phone,category,dimensions:acquisition?"":dimensions,message:messageWithDelivery,acquisition,artworks:artworkLines}, ownerTest, requester); }
   catch { return NextResponse.json({ message: "Le suivi des demandes est temporairement indisponible. Réessayez dans un instant." }, { status: 503 }); }
   if (!reservation) return NextResponse.json({ message: "Vous avez déjà envoyé deux demandes en attente. Merci d’attendre notre réponse avant de nous écrire à nouveau." }, { status: 429 });
 
@@ -200,7 +200,7 @@ export async function POST(request: Request) {
       to: recipient,
       replyTo: email,
 
-      ...formatContactEmail({firstName,lastName,phone,email,category,dimensions,message,acquisition,artworks:artworkLines}),
+      ...formatContactEmail({firstName,lastName,phone,email,category,dimensions,message:messageWithDelivery,acquisition,artworks:artworkLines}),
     });
   } catch {
     try { if(reservation)await releaseContact(reservation); } catch { console.error("Quota de contact à réconcilier après échec SMTP."); }
