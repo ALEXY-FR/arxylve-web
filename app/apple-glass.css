@@ -78,3 +78,23 @@ body .cart-selection .cart-total>span{font-size:var(--type-medium)!important;lin
 .delivery-status{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:5px 12px;border-radius:999px;border:1px solid #ffffff2b;background:linear-gradient(145deg,#ffffff26,#ffffff09);box-shadow:inset 0 1px 2px #ffffff40,0 3px 10px #0003;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#f3eff4}
 .cart-selection button.delivery-option,.cart-selection button.delivery-option:hover,.cart-selection button.delivery-option[aria-pressed=true]{border-color:transparent}
 .cart-selection button.delivery-option[aria-pressed=true]{box-shadow:inset 0 1px 2px #a8789930,0 8px 20px #0004}
+@media(hover:hover){
+ .hover-artwork-info:hover{background:linear-gradient(140deg,#28354530,#080e1945);backdrop-filter:blur(5px) saturate(115%);-webkit-backdrop-filter:blur(5px) saturate(115%);border-color:#e2edff55}
+ .masonry-card .availability:hover{filter:brightness(1.35);border-color:currentColor;box-shadow:inset 0 1px 3px #ffffff60,0 0 16px currentColor}
+ .artwork-facts:hover{border-color:#8692b299;box-shadow:inset 0 1px 3px #e3e7ee40,inset 0 -2px 12px #1b2d5866,0 8px 24px #1b2d5840}
+ .cart-empty .empty-collection-button:hover{background:linear-gradient(145deg,rgb(var(--hover-color) / .85),rgb(var(--hover-color) / .45));border-color:rgb(var(--hover-color) / .95)}
+}
+.hover-artwork-info{transition:background .35s,backdrop-filter .35s,opacity .35s,transform .35s}
+.artwork-facts{position:relative;isolation:isolate;overflow:hidden;transition:border-color .35s,box-shadow .35s}
+.artwork-facts::after{content:"";position:absolute;inset:-100% -45%;z-index:2;pointer-events:none;opacity:0;border-radius:45%;background:linear-gradient(115deg,transparent 35%,#6679a408 42%,#e2e6ef52 49%,#354f891a 55%,transparent 65%);filter:blur(5px)}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.artwork-facts:hover::after{animation:price-liquid-reflection 2.8s ease-in-out infinite}}
+.social-links .social-icon[data-network=instagram]{background:linear-gradient(145deg,#6240b5a6,#c13584a0 50%,#e6733b99 80%,#f8c85e88);border-color:#f48a9c77;color:#fff}
+.social-links .social-icon[data-network=instagram] .iconFill{fill:#fff}
+.cart-selection .remove-button{color:#ff9fa7;border-color:#d9576280;background:linear-gradient(145deg,#a52f3e55,#35141c88);box-shadow:inset 0 1px 2px #ffb8bc30}
+.cart-selection .remove-button:hover{border-color:#ff8c94;box-shadow:inset 0 1px 3px #ffc0c055,0 0 14px #ba344650}
+form .delivery-option{margin-top:16px;max-width:100%;border-radius:22px}
+form .delivery-option[aria-pressed=true],form .delivery-option[aria-pressed=true]:hover{border-color:transparent;background:linear-gradient(140deg,#2b8759c9,#174d3abb);box-shadow:inset 0 1px 2px #a9e4bd35,0 8px 20px #0004}
+.cart-page>.cart-empty{background:linear-gradient(145deg,#ffffff16,#18213044);border-color:#ffffff30;backdrop-filter:blur(20px) saturate(145%);-webkit-backdrop-filter:blur(20px) saturate(145%)}
+.success-dialog{width:min(440px,calc(100% - 32px));padding:28px;border:1px solid #ffffff45;border-radius:28px;color:#f3f5fa;background:linear-gradient(145deg,#303a4df2,#10141ff7);box-shadow:inset 0 1px 3px #ffffff40,0 25px 80px #000a;backdrop-filter:blur(24px)}
+.success-dialog::backdrop{background:#03050bb3;backdrop-filter:blur(5px)}.success-dialog h2{margin:0 0 16px}.success-dialog p{margin:0 0 22px}
+@media(prefers-reduced-motion:reduce){.hover-artwork-info,.artwork-facts{transition:none}}
