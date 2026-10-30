@@ -133,3 +133,10 @@ form .delivery-option>.delivery-status{width:112px}
 @media(pointer:fine){html,body{cursor:url('/glass-cursor.svg') 4 2,auto}body :is(a,button,select,summary){cursor:url('/glass-cursor.svg') 4 2,pointer}.button.purchase-action:disabled{cursor:url('/glass-cursor.svg') 4 2,default}}
 @media(max-width:600px){form .delivery-option>.delivery-status{width:82px}}
 @media(pointer:fine){body :is(a,button,select,summary):not(:disabled){cursor:url('/glass-cursor.svg') 4 2,pointer!important}}
+/* The option is a label and price; only the status pill is interactive. */
+form .delivery-option{cursor:inherit}
+form .delivery-option>.delivery-status{border:1px solid #72cf9360;color:#e2f8e8;background:linear-gradient(145deg,#45885a70,#18432c70);transition:background .25s,border-color .25s,box-shadow .25s}
+form .delivery-status[aria-pressed=true]{color:#f2fff5;border-color:#72d59a;background:linear-gradient(145deg,#388b56e0,#1b5e3ad9);box-shadow:inset 0 1px 2px #c7ffd255,0 3px 12px #1a5a3270}
+@media(hover:hover){form .delivery-option>.delivery-status:hover{color:#f4fff6;border-color:#9cf0b8;background:linear-gradient(145deg,#53af70e6,#237b4ae0);box-shadow:inset 0 1px 3px #e4ffeb88,0 0 16px #62d68c88}}
+@media(pointer:fine){html,body{cursor:var(--glass-cursor,url('/cursor-marine.svg')) 2 1,auto}body :is(a,button,select,summary):not(:disabled){cursor:var(--glass-cursor,url('/cursor-marine.svg')) 2 1,pointer!important}.button.purchase-action:disabled{cursor:var(--glass-cursor,url('/cursor-marine.svg')) 2 1,default}}
+@media(hover:hover){form .delivery-option:hover{border-color:transparent;box-shadow:var(--glass-shadow)}}
