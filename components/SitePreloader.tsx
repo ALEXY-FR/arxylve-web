@@ -2,6 +2,7 @@
 
 import {useEffect, useState} from 'react';
 import {usePathname} from 'next/navigation';
+import {AmbientBackground} from './AmbientBackground';
 
 // The root layout persists across navigation: show this only on a home arrival.
 export function SitePreloader() {
@@ -70,8 +71,9 @@ useEffect(() => {
 
   if (pathname !== '/' || phase === 'hidden') return null;
   return <>
-    <div className="site-preloader" data-variant="reveal" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
-      <div className="preloader-reveal-scene" aria-hidden="true">
+    <div className="site-preloader" data-variant="reflection" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
+      <AmbientBackground/>
+      <div className="preloader-reflection-scene" aria-hidden="true">
         <span className="preloader-glass-wordmark">ARXYLVE</span>
       </div>
     </div>

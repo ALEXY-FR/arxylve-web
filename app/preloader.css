@@ -1,29 +1,32 @@
 .site-preloader{
   position:fixed;inset:0;z-index:10000;display:grid;place-items:center;overflow:hidden;
-  background:linear-gradient(145deg,#07080b8c,#28142673 50%,#07080b9c);
-  -webkit-backdrop-filter:blur(26px) saturate(.75);backdrop-filter:blur(26px) saturate(.75);
-  transition:backdrop-filter 900ms cubic-bezier(.22,.61,.36,1),-webkit-backdrop-filter 900ms cubic-bezier(.22,.61,.36,1),opacity 900ms ease;
-  animation:preloader-failsafe 1ms 9s forwards;
+  background:radial-gradient(ellipse at 50% 47%,#64244818,transparent 47%),radial-gradient(ellipse at 67% 30%,#1b2d5812,transparent 62%),#07080b;
+  opacity:1;transition:opacity 900ms cubic-bezier(.22,.61,.36,1);animation:preloader-failsafe 1ms 9s forwards;
 }
-.preloader-reveal-scene{position:relative;z-index:1;display:grid;place-items:center;width:100%;min-width:0;isolation:isolate;transition:opacity 650ms ease}
+.site-preloader > .ambient-background{z-index:0}
+.preloader-reflection-scene{position:relative;z-index:1;display:grid;place-items:center;width:100%;min-width:0;isolation:isolate}
 /* Preserve the approved size despite the site's shared inherited typography. */
 .site-preloader .preloader-glass-wordmark{
   position:relative;display:block;white-space:nowrap;width:max-content;
   font:300 180px/1.15 GrandCru,Arial,sans-serif;
   font-size:calc(var(--type-small,18px)*10)!important;letter-spacing:.075em;
-  color:#e9e1ec;text-shadow:0 1px 0 #ffffff50,0 12px 40px #0004;
+  color:#ded5e4;text-shadow:0 1px 0 #ffffff35,0 12px 38px #0005;
 }
 @supports (-webkit-background-clip:text) or (background-clip:text){
   .site-preloader .preloader-glass-wordmark{
-    background:linear-gradient(165deg,#ffffffe0 0%,#ece6ff73 30%,#ffffff24 48%,#e9d4e6bd 51%,#ffffff30 72%,#ffffffbd 100%);
+    background:linear-gradient(165deg,#fff9 0%,#ece6ff45 30%,#ffffff24 48%,#e9d4e669 51%,#ffffff20 72%,#fff8 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
-    -webkit-text-stroke:.7px #f9eeff9c;
+    -webkit-text-stroke:.6px #f9eeff59;
+  }
+  .preloader-glass-wordmark::after{
+    content:'ARXYLVE';position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(110deg,transparent 39%,#fff2 44%,#fffffff2 49%,#fff5 53%,transparent 59%);
+    background-size:300% 100%;background-position:100% 0;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    -webkit-text-stroke:0;animation:preloader-reflection 2400ms ease-in-out infinite;
   }
 }
-.site-preloader[data-phase="leaving"]{
-  opacity:0;pointer-events:none;
-  -webkit-backdrop-filter:blur(0) saturate(1);backdrop-filter:blur(0) saturate(1);
-}
-.site-preloader[data-phase="leaving"] .preloader-reveal-scene{opacity:0}
+.site-preloader[data-phase="leaving"]{opacity:0;pointer-events:none}
+@keyframes preloader-reflection{0%,8%{background-position:100% 0}85%,100%{background-position:0% 0}}
 @keyframes preloader-failsafe{to{visibility:hidden;pointer-events:none}}
-@media(prefers-reduced-motion:reduce){.site-preloader,.preloader-reveal-scene{transition-duration:140ms}.site-preloader{-webkit-backdrop-filter:none;backdrop-filter:none}}
+@media(prefers-reduced-motion:reduce){.site-preloader{transition-duration:140ms}.preloader-glass-wordmark::after{animation:none;opacity:0}}
