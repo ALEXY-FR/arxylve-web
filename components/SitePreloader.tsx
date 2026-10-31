@@ -77,7 +77,7 @@ useEffect(() => {
 
   if (pathname !== '/' || phase === 'hidden') return null;
   return <>
-    <div className="site-preloader" data-variant="letters" data-material="liquid-glass" data-tone={tone.name} style={{'--preloader-tint':tone.rgb} as CSSProperties} data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
+    <div className="site-preloader" data-variant="letters" data-material="textured-glass" data-tone={tone.name} style={{'--preloader-tint':tone.rgb} as CSSProperties} data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
       <AmbientBackground/>
       <div className="preloader-letters-scene" aria-hidden="true">
         <span className="preloader-glass-wordmark">{Array.from("ARXYLVE", (letter, index) => <span className="preloader-glass-letter" key={index} style={{animationDelay:`${index * 220}ms`}}>{letter}</span>)}</span>

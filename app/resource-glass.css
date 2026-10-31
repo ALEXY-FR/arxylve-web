@@ -7,6 +7,3 @@
 .preloader-disc-wordmark[data-liquid-ready="true"]{color:transparent!important;text-shadow:none!important}
 .preloader-disc-wordmark>.resource-glass-canvas{inset:-5% -2%!important;width:104%!important;height:110%!important}
 @media(prefers-reduced-motion:reduce){.resource-glass-canvas{transition:none}}
-
-.preloader-glass-letter[data-liquid-ready="true"]{color:transparent!important;-webkit-text-stroke:0!important;text-shadow:none!important}
-.preloader-glass-letter>.resource-glass-canvas{z-index:0}

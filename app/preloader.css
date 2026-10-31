@@ -23,6 +23,11 @@
     -webkit-text-stroke:.6px #f9eeff70;
   }
 }
+@supports (-webkit-background-clip:text) or (background-clip:text){
+  .site-preloader[data-tone="Argent"] .preloader-glass-letter{
+    background-image:linear-gradient(165deg,#fffc 0%,#ece6ff65 30%,#ffffff35 48%,#e9d4e6a0 51%,#ffffff40 72%,#fffc 100%);
+  }
+}
 .site-preloader[data-phase="leaving"]{opacity:0;pointer-events:none}
 @keyframes preloader-letter-light{
   from{opacity:.24;text-shadow:0 1px 0 #ffffff18,0 0 0 #efd7ff00}
