@@ -9,6 +9,8 @@ const glyphLayout = preloaderLetterPaths.map((glyph,index) => ({...glyph,x:prelo
 const wordWidth = preloaderLetterPaths.reduce((sum,glyph)=>sum+glyph.width,0);
 const wordHeight = preloaderLetterPaths[0].height;
 const reflectionWidth = 260;
+const reflectionAngle = 8 * Math.PI / 180;
+const reflectionTilt = Math.tan(reflectionAngle) * wordHeight / 2;
 
 // The root layout persists across navigation: show this only on a home arrival.
 export function SitePreloader() {
@@ -81,7 +83,7 @@ useEffect(() => {
     <div className="site-preloader" data-variant="letters" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
       <AmbientBackground/>
       <div className="preloader-letters-scene" aria-hidden="true">
-        <span className="preloader-glass-wordmark" data-renderer="svg-paths" data-reflection="linear-reveal">
+        <span className="preloader-glass-wordmark" data-renderer="svg-paths" data-reflection="linear-reveal" data-reflection-angle="8">
           <svg className="preloader-vector-letter" viewBox={'0 0 '+wordWidth+' '+wordHeight} style={{width:(wordWidth/1000)+'em',height:'1.15em'}} aria-hidden="true" focusable="false">
             <defs>
               {glyphLayout.map((glyph,index)=><linearGradient key={index} id={glassId+'-glass-'+index} gradientUnits="userSpaceOnUse" x1={glyph.x1} y1={glyph.y1} x2={glyph.x2} y2={glyph.y2}>
@@ -90,14 +92,14 @@ useEffect(() => {
                 <stop offset="1" stopColor="white" stopOpacity=".8"/>
               </linearGradient>)}
               <clipPath id={glassId+'-reveal'} clipPathUnits="userSpaceOnUse">
-                <rect x={-reflectionWidth} y="0" width="0" height={wordHeight}>
-                  <animate attributeName="width" from="0" to={wordWidth+2*reflectionWidth} begin="0s" dur="2.8s" calcMode="linear" fill="freeze"/>
-                </rect>
+                <polygon points={(-2*wordWidth)+' 0 '+reflectionTilt+' 0 '+(-reflectionTilt)+' '+wordHeight+' '+(-2*wordWidth)+' '+wordHeight} transform={'translate('+(-reflectionWidth)+' 0)'}>
+                  <animateTransform attributeName="transform" type="translate" from={(-reflectionWidth)+' 0'} to={(wordWidth+reflectionWidth)+' 0'} begin="0s" dur="2.8s" calcMode="linear" fill="freeze"/>
+                </polygon>
               </clipPath>
               <clipPath id={glassId+'-word'} clipPathUnits="userSpaceOnUse">
                 {glyphLayout.map((glyph,index)=><path key={index} d={glyph.path} transform={'translate('+glyph.x+' 0)'}/>)}
               </clipPath>
-              <linearGradient id={glassId+'-reflection'} gradientUnits="userSpaceOnUse" x1={-reflectionWidth} y1="0" x2={reflectionWidth} y2="0" gradientTransform={'translate('+(-reflectionWidth)+' 0)'}>
+              <linearGradient id={glassId+'-reflection'} gradientUnits="userSpaceOnUse" x1={-reflectionWidth*Math.cos(reflectionAngle)} y1={wordHeight/2-reflectionWidth*Math.sin(reflectionAngle)} x2={reflectionWidth*Math.cos(reflectionAngle)} y2={wordHeight/2+reflectionWidth*Math.sin(reflectionAngle)} gradientTransform={'translate('+(-reflectionWidth)+' 0)'}>
                 <stop offset="0" stopColor="white" stopOpacity="0"/>
                 <stop offset=".3" stopColor="#ece6ff" stopOpacity=".15"/>
                 <stop offset=".5" stopColor="white" stopOpacity=".95"/>
