@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useLayoutEffect, useState, type CSSProperties} from 'react';
+import {useEffect, useId, useLayoutEffect, useState, type CSSProperties} from 'react';
 import {palette} from '../data/palette';
 
 import {AmbientBackground} from './AmbientBackground';
@@ -11,6 +11,7 @@ const glassTones = [{name:'Argent',rgb:'230 236 245'}, ...palette];
 // The root layout persists across navigation: show this only on a home arrival.
 export function SitePreloader() {
   const pathname = usePathname();
+  const glassId = useId().replace(/:/g, '');
   const [tone, setTone] = useState(glassTones[0]);
   useLayoutEffect(() => { setTone(glassTones[Math.floor(Math.random() * glassTones.length)]); }, []);
   const [phase, setPhase] = useState<'loading' | 'leaving' | 'hidden'>(pathname === '/' ? 'loading' : 'hidden');
@@ -77,10 +78,34 @@ useEffect(() => {
 
   if (pathname !== '/' || phase === 'hidden') return null;
   return <>
-    <div className="site-preloader" data-variant="letters" data-material="textured-glass" data-tone={tone.name} style={{'--preloader-tint':tone.rgb} as CSSProperties} data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
+    <div className="site-preloader" data-variant="letters" data-material="vector-button-glass" data-tone={tone.name} style={{'--preloader-tint':tone.rgb} as CSSProperties} data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
       <AmbientBackground/>
       <div className="preloader-letters-scene" aria-hidden="true">
-        <span className="preloader-glass-wordmark">{Array.from("ARXYLVE", (letter, index) => <span className="preloader-glass-letter" key={index} style={{animationDelay:`${index * 220}ms`}}>{letter}</span>)}</span>
+        <svg className="preloader-glass-defs" width="0" height="0" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id={`${glassId}-surface`} x1="0" y1="0" x2=".7" y2="1">
+              <stop offset="0" stopColor="white" stopOpacity=".8"/>
+              <stop offset=".12" stopColor="rgb(var(--preloader-tint))" stopOpacity=".9"/>
+              <stop offset=".42" stopColor="rgb(var(--preloader-tint))" stopOpacity=".72"/>
+              <stop offset=".49" stopColor="white" stopOpacity=".26"/>
+              <stop offset=".56" stopColor="rgb(var(--preloader-tint))" stopOpacity=".6"/>
+              <stop offset="1" stopColor="rgb(var(--preloader-tint))" stopOpacity=".4"/>
+            </linearGradient>
+            <linearGradient id={`${glassId}-edge`} x1="0" y1="0" x2=".3" y2="1">
+              <stop offset="0" stopColor="white" stopOpacity=".7"/>
+              <stop offset=".4" stopColor="white" stopOpacity=".12"/>
+              <stop offset="1" stopColor="white" stopOpacity=".3"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span className="preloader-glass-wordmark">{Array.from("ARXYLVE", (letter, index) =>
+          <span className="preloader-glass-letter" key={index} style={{animationDelay:`${index * 220}ms`}}>
+            <span className="preloader-letter-measure">{letter}</span>
+            <svg className="preloader-vector-letter" width="100%" height="100%" aria-hidden="true" focusable="false">
+              <text x="0" y=".9em" fill={`url(#${glassId}-surface)`} stroke={`url(#${glassId}-edge)`} strokeWidth=".8" paintOrder="stroke fill">{letter}</text>
+            </svg>
+          </span>
+        )}</span>
       </div>
     </div>
     <noscript><style>{'.site-preloader{display:none!important}'}</style></noscript>
