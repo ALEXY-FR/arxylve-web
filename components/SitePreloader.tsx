@@ -1,19 +1,12 @@
 "use client";
 
-import {useEffect, useId, useLayoutEffect, useState, type CSSProperties} from 'react';
-import {palette} from '../data/palette';
-
+import {useEffect, useState} from 'react';
 import {AmbientBackground} from './AmbientBackground';
 import {usePathname} from 'next/navigation';
-
-const glassTones = [{name:'Argent',rgb:'230 236 245'}, ...palette];
 
 // The root layout persists across navigation: show this only on a home arrival.
 export function SitePreloader() {
   const pathname = usePathname();
-  const glassId = useId().replace(/:/g, '');
-  const [tone, setTone] = useState(glassTones[0]);
-  useLayoutEffect(() => { setTone(glassTones[Math.floor(Math.random() * glassTones.length)]); }, []);
   const [phase, setPhase] = useState<'loading' | 'leaving' | 'hidden'>(pathname === '/' ? 'loading' : 'hidden');
 
 useEffect(() => {
@@ -78,29 +71,10 @@ useEffect(() => {
 
   if (pathname !== '/' || phase === 'hidden') return null;
   return <>
-    <div className="site-preloader" data-variant="letters" data-material="vector-textured-glass" data-tone={tone.name} style={{'--preloader-tint':tone.rgb} as CSSProperties} data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
+    <div className="site-preloader" data-variant="letters" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
       <AmbientBackground/>
       <div className="preloader-letters-scene" aria-hidden="true">
-        <svg className="preloader-glass-defs" width="0" height="0" aria-hidden="true" focusable="false">
-          <defs>
-            <linearGradient id={`${glassId}-surface`} x1="0" y1="0" x2=".26" y2="1">
-              <stop offset="0" stopColor="white" stopOpacity=".8"/>
-              <stop offset=".3" stopColor={tone.name==='Argent'?'#ece6ff':`rgb(${tone.rgb})`} stopOpacity={tone.name==='Argent'?.396:.65}/>
-              <stop offset=".48" stopColor={tone.name==='Argent'?'white':`rgb(${tone.rgb})`} stopOpacity={tone.name==='Argent'?.208:.25}/>
-              <stop offset=".51" stopColor={tone.name==='Argent'?'#e9d4e6':'white'} stopOpacity={tone.name==='Argent'?.627:.565}/>
-              <stop offset=".72" stopColor={tone.name==='Argent'?'white':`rgb(${tone.rgb})`} stopOpacity={tone.name==='Argent'?.25:.5}/>
-              <stop offset="1" stopColor="white" stopOpacity=".8"/>
-            </linearGradient>
-          </defs>
-        </svg>
-        <span className="preloader-glass-wordmark">{Array.from("ARXYLVE", (letter, index) =>
-          <span className="preloader-glass-letter" key={index} style={{animationDelay:`${index * 220}ms`}}>
-            <span className="preloader-letter-measure">{letter}</span>
-            <svg className="preloader-vector-letter" width="100%" height="100%" aria-hidden="true" focusable="false">
-              <text x="0" y=".9em" fill={`url(#${glassId}-surface)`} stroke="#f9eeff70" strokeWidth=".6" paintOrder="stroke fill">{letter}</text>
-            </svg>
-          </span>
-        )}</span>
+        <span className="preloader-glass-wordmark">{Array.from("ARXYLVE", (letter, index) => <span className="preloader-glass-letter" key={index} style={{animationDelay:`${index * 220}ms`}}>{letter}</span>)}</span>
       </div>
     </div>
     <noscript><style>{'.site-preloader{display:none!important}'}</style></noscript>
