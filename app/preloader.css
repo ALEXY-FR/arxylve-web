@@ -12,14 +12,14 @@
   font-size:calc(var(--type-small,18px)*10)!important;letter-spacing:.075em;
 }
 .preloader-glass-letter{
-  display:block;position:relative;color:#ded5e4;opacity:.24;
+  display:block;position:relative;color:#ded5e4;opacity:.06;
   text-shadow:0 1px 0 #ffffff35,0 12px 38px #0005;
-  animation:preloader-letter-light 650ms ease-out both;
+  animation:preloader-letter-light 1300ms ease-in-out both;
 }
 .preloader-vector-letter{display:block;overflow:visible}
 .site-preloader[data-phase="leaving"]{opacity:0;pointer-events:none}
 @keyframes preloader-letter-light{
-  from{opacity:.24;text-shadow:0 1px 0 #ffffff18,0 0 0 #efd7ff00}
+  from{opacity:.06;text-shadow:0 1px 0 #ffffff18,0 0 0 #efd7ff00}
   to{opacity:1;text-shadow:0 1px 0 #ffffff65,0 0 24px #efd7ff40,0 0 60px #bd86b42b}
 }
 @keyframes preloader-failsafe{to{visibility:hidden;pointer-events:none}}
