@@ -34,7 +34,7 @@ useEffect(() => {
     const opening = window.setTimeout(() => {
       minimumElapsed = true;
       revealIfReady();
-    }, reducedMotion ? 0 : 4800);
+    }, reducedMotion ? 0 : 7100);
     // A failed asset must never trap the visitor behind the opening screen.
     const deadline = window.setTimeout(finish, 6000);
     const frame = requestAnimationFrame(() => {
@@ -91,7 +91,7 @@ useEffect(() => {
                   <stop offset=".5" stopColor="white" stopOpacity=".9"/>
                   <stop offset=".7" stopColor="#e9d4e6" stopOpacity=".12"/>
                   <stop offset="1" stopColor="white" stopOpacity="0"/>
-                  <animateTransform attributeName="gradientTransform" type="translate" from={(-glyph.width*1.5)+' 0'} to={(glyph.width*1.5)+' 0'} begin={(index*.44)+'s'} dur="1.3s" fill="freeze"/>
+                  <animateTransform attributeName="gradientTransform" type="translate" from={(-glyph.width*1.5)+' 0'} to={(glyph.width*1.5)+' 0'} begin={(5.44+index*.12).toFixed(2)+'s'} dur=".45s" fill="freeze"/>
                 </linearGradient>
               </defs>
               <path d={glyph.path} fill={'url(#'+glassId+'-'+index+')'} stroke="#f9eeff70" strokeWidth=".6" vectorEffect="non-scaling-stroke" paintOrder="stroke fill"/>
