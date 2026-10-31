@@ -5,6 +5,11 @@ import {preloaderLetterPaths} from '../data/preloader-letter-paths';
 import {AmbientBackground} from './AmbientBackground';
 import {usePathname} from 'next/navigation';
 
+const glyphLayout = preloaderLetterPaths.map((glyph,index) => ({...glyph,x:preloaderLetterPaths.slice(0,index).reduce((sum,item)=>sum+item.width,0)}));
+const wordWidth = preloaderLetterPaths.reduce((sum,glyph)=>sum+glyph.width,0);
+const wordHeight = preloaderLetterPaths[0].height;
+const reflectionWidth = 260;
+
 // The root layout persists across navigation: show this only on a home arrival.
 export function SitePreloader() {
   const pathname = usePathname();
@@ -34,7 +39,7 @@ useEffect(() => {
     const opening = window.setTimeout(() => {
       minimumElapsed = true;
       revealIfReady();
-    }, reducedMotion ? 0 : 7100);
+    }, reducedMotion ? 0 : 3500);
     // A failed asset must never trap the visitor behind the opening screen.
     const deadline = window.setTimeout(finish, 6000);
     const frame = requestAnimationFrame(() => {
@@ -76,29 +81,40 @@ useEffect(() => {
     <div className="site-preloader" data-variant="letters" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
       <AmbientBackground/>
       <div className="preloader-letters-scene" aria-hidden="true">
-        <span className="preloader-glass-wordmark" data-renderer="svg-paths" data-reflection="progressive">{preloaderLetterPaths.map((glyph, index) =>
-          <span className="preloader-glass-letter" key={index} style={{animationDelay:(index * 440)+'ms'}}>
-            <svg className="preloader-vector-letter" viewBox={'0 0 '+glyph.width+' '+glyph.height} style={{width:(glyph.width / 1000)+'em',height:'1.15em'}} aria-hidden="true" focusable="false">
-              <defs>
-                <linearGradient id={glassId+'-'+index} gradientUnits="userSpaceOnUse" x1={glyph.x1} y1={glyph.y1} x2={glyph.x2} y2={glyph.y2}>
-                  <stop offset="0" stopColor="white" stopOpacity=".86"/>
-                  <stop offset=".5" stopColor="#ece6ff" stopOpacity=".56"/>
-                  <stop offset="1" stopColor="white" stopOpacity=".8"/>
-                </linearGradient>
-                <linearGradient id={glassId+'-reflection-'+index} gradientTransform={'translate('+(-glyph.width*1.5)+' 0)'} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2={glyph.width} y2={glyph.height*.18}>
-                  <stop offset="0" stopColor="white" stopOpacity="0"/>
-                  <stop offset=".3" stopColor="#ece6ff" stopOpacity=".06"/>
-                  <stop offset=".5" stopColor="white" stopOpacity=".9"/>
-                  <stop offset=".7" stopColor="#e9d4e6" stopOpacity=".12"/>
-                  <stop offset="1" stopColor="white" stopOpacity="0"/>
-                  <animateTransform attributeName="gradientTransform" type="translate" from={(-glyph.width*1.5)+' 0'} to={(glyph.width*1.5)+' 0'} begin={(5.44+index*.12).toFixed(2)+'s'} dur=".45s" fill="freeze"/>
-                </linearGradient>
-              </defs>
-              <path d={glyph.path} fill={'url(#'+glassId+'-'+index+')'} stroke="#f9eeff70" strokeWidth=".6" vectorEffect="non-scaling-stroke" paintOrder="stroke fill"/>
-              <path className="preloader-moving-reflection" d={glyph.path} fill={'url(#'+glassId+'-reflection-'+index+')'}/>
-            </svg>
-          </span>
-        )}</span>
+        <span className="preloader-glass-wordmark" data-renderer="svg-paths" data-reflection="linear-reveal">
+          <svg className="preloader-vector-letter" viewBox={'0 0 '+wordWidth+' '+wordHeight} style={{width:(wordWidth/1000)+'em',height:'1.15em'}} aria-hidden="true" focusable="false">
+            <defs>
+              {glyphLayout.map((glyph,index)=><linearGradient key={index} id={glassId+'-glass-'+index} gradientUnits="userSpaceOnUse" x1={glyph.x1} y1={glyph.y1} x2={glyph.x2} y2={glyph.y2}>
+                <stop offset="0" stopColor="white" stopOpacity=".86"/>
+                <stop offset=".5" stopColor="#ece6ff" stopOpacity=".56"/>
+                <stop offset="1" stopColor="white" stopOpacity=".8"/>
+              </linearGradient>)}
+              <clipPath id={glassId+'-reveal'} clipPathUnits="userSpaceOnUse">
+                <rect x={-reflectionWidth} y="0" width="0" height={wordHeight}>
+                  <animate attributeName="width" from="0" to={wordWidth+2*reflectionWidth} begin="0s" dur="2.8s" calcMode="linear" fill="freeze"/>
+                </rect>
+              </clipPath>
+              <clipPath id={glassId+'-word'} clipPathUnits="userSpaceOnUse">
+                {glyphLayout.map((glyph,index)=><path key={index} d={glyph.path} transform={'translate('+glyph.x+' 0)'}/>)}
+              </clipPath>
+              <linearGradient id={glassId+'-reflection'} gradientUnits="userSpaceOnUse" x1={-reflectionWidth} y1="0" x2={reflectionWidth} y2="0" gradientTransform={'translate('+(-reflectionWidth)+' 0)'}>
+                <stop offset="0" stopColor="white" stopOpacity="0"/>
+                <stop offset=".3" stopColor="#ece6ff" stopOpacity=".15"/>
+                <stop offset=".5" stopColor="white" stopOpacity=".95"/>
+                <stop offset=".7" stopColor="#e9d4e6" stopOpacity=".15"/>
+                <stop offset="1" stopColor="white" stopOpacity="0"/>
+                <animateTransform attributeName="gradientTransform" type="translate" from={(-reflectionWidth)+' 0'} to={(wordWidth+reflectionWidth)+' 0'} begin="0s" dur="2.8s" calcMode="linear" fill="freeze"/>
+              </linearGradient>
+            </defs>
+            <g opacity=".06">
+              {glyphLayout.map((glyph,index)=><path key={index} d={glyph.path} transform={'translate('+glyph.x+' 0)'} fill={'url(#'+glassId+'-glass-'+index+')'} stroke="#f9eeff70" strokeWidth=".6" vectorEffect="non-scaling-stroke" paintOrder="stroke fill"/>)}
+            </g>
+            <g className="preloader-lit-word" clipPath={'url(#'+glassId+'-reveal)'}>
+              {glyphLayout.map((glyph,index)=><path key={index} d={glyph.path} transform={'translate('+glyph.x+' 0)'} fill={'url(#'+glassId+'-glass-'+index+')'} stroke="#f9eeff70" strokeWidth=".6" vectorEffect="non-scaling-stroke" paintOrder="stroke fill"/>)}
+            </g>
+            <rect className="preloader-moving-reflection" x={-reflectionWidth} y="0" width={wordWidth+2*reflectionWidth} height={wordHeight} fill={'url(#'+glassId+'-reflection)'} clipPath={'url(#'+glassId+'-word)'}/>
+          </svg>
+        </span>
       </div>
     </div>
     <noscript><style>{'.site-preloader{display:none!important}'}</style></noscript>
