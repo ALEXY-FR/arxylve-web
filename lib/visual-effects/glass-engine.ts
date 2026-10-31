@@ -1,6 +1,7 @@
 import {glassVertex, glassFragment} from './glass-shaders';
+import {createTextGlassMask} from './text-glass-mask';
 
-const publicSurfaces = '.preloader-disc,.preloader-disc-wordmark,.brand-button';
+const publicSurfaces = '.preloader-disc,.preloader-disc-wordmark,.preloader-glass-letter,.brand-button';
 const adminSurfaces = [
   publicSurfaces,'.button','.liquid-select-trigger','.liquid-select-panel',
   '.notice','.request-card','.auto-format-label','.admin-work','.admin-texts','.admin-login','.admin-command-bar',
@@ -9,7 +10,7 @@ const adminSurfaces = [
   '.liquid-select-search','.admin-page input','.admin-page textarea',
 ].join(',');
 
-type Surface = {host:HTMLElement;canvas:HTMLCanvasElement;context:CanvasRenderingContext2D;kind:'surface'|'disc'|'text';native:boolean;position:string};
+type Surface = {host:HTMLElement;canvas:HTMLCanvasElement;context:CanvasRenderingContext2D;kind:'surface'|'disc'|'text';native:boolean;position:string;textMask?:{key:string;field:WebGLTexture;coverage:WebGLTexture}};
 const loadImage = (url:string) => new Promise<HTMLImageElement>((resolve,reject) => {const image=new Image();image.onload=()=>resolve(image);image.onerror=reject;image.src=url;});
 
 /** One shared GPU context avoids the mobile WebGL-context limit across a whole site. */
@@ -35,18 +36,19 @@ export async function mountSiteGlass() {
   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([0,0,0,255]));
   // Other arrivals only need the brand/admin glass, without the opening's image masks.
   let icon:HTMLImageElement|undefined;
-  if(document.querySelector('.site-preloader')){
+  if(document.querySelector('.preloader-disc,.preloader-disc-wordmark')){
     const [pattern,textMask,circleMask,textCoverage,circleCoverage]=await Promise.all([loadImage('/images/liquid/disc-pattern.svg'),loadImage('/images/liquid/wordmark-mask.png'),loadImage('/images/liquid/disc-mask.png'),loadImage('/images/liquid/wordmark-coverage.png'),loadImage('/images/liquid/disc-coverage.png')]);
     icon=pattern;
     for(const [target,image] of [[textTexture,textMask],[circleTexture,circleMask],[textCoverageTexture,textCoverage],[circleCoverageTexture,circleCoverage]] as const){gl.bindTexture(gl.TEXTURE_2D,target);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,image);}
   }
+  if(document.querySelector('.preloader-glass-letter'))await document.fonts.load('300 180px GrandCru').catch(()=>[]);
   const background=document.createElement('canvas'),backgroundContext=background.getContext('2d')!;
   const discBackground=document.createElement('canvas');discBackground.width=256;discBackground.height=256;const discContext=discBackground.getContext('2d')!;
   const records=new Map<HTMLElement,Surface>(),motion=matchMedia('(prefers-reduced-motion: reduce)');
   let disposed=false,frame=0,last=0,scanFrame=0,renderTimer=0,backgroundScale=1,openingReleased=false;
   const resizeObserver=new ResizeObserver(queueRender);
   function releaseOpening(){if(openingReleased)return;openingReleased=true;icon=undefined;discBackground.width=discBackground.height=0;for(const t of [discTexture,textTexture,circleTexture,textCoverageTexture,circleCoverageTexture])gl.deleteTexture(t);}
-  function remove(record:Surface){resizeObserver.unobserve(record.host);record.canvas.remove();record.canvas.width=record.canvas.height=0;record.host.style.position=record.position;record.host.style.removeProperty('--liquid-image');delete record.host.dataset.resourceGlass;delete record.host.dataset.liquidReady;records.delete(record.host);}
+  function remove(record:Surface){if(record.textMask){gl.deleteTexture(record.textMask.field);gl.deleteTexture(record.textMask.coverage);}resizeObserver.unobserve(record.host);record.canvas.remove();record.canvas.width=record.canvas.height=0;record.host.style.position=record.position;record.host.style.removeProperty('--liquid-image');delete record.host.dataset.resourceGlass;delete record.host.dataset.liquidReady;records.delete(record.host);}
   function scan(){
     scanFrame=0;
     const adminView=location.pathname==='/admin'||location.pathname.startsWith('/admin/');
@@ -67,7 +69,7 @@ export async function mountSiteGlass() {
       const canvas=document.createElement('canvas'),context=canvas.getContext('2d');if(!context)continue;
       const native=host.matches('input,textarea,select');const style=getComputedStyle(host),position=host.style.position;
       if(!native&&style.position==='static')host.style.position='relative';
-      const kind=host.classList.contains('preloader-disc')?'disc':host.classList.contains('preloader-disc-wordmark')?'text':'surface';
+      const kind=host.classList.contains('preloader-disc')?'disc':host.matches('.preloader-disc-wordmark,.preloader-glass-letter')?'text':'surface';
       canvas.className='resource-glass-canvas';canvas.setAttribute('aria-hidden','true');canvas.setAttribute('data-html2canvas-ignore','true');
       if(!native)host.appendChild(canvas);
       host.dataset.resourceGlass=kind;records.set(host,{host,canvas,context,kind,native,position});resizeObserver.observe(host);
@@ -123,6 +125,16 @@ export async function mountSiteGlass() {
     const style=getComputedStyle(host);const dpr=Math.min(devicePixelRatio,1.35),limit=Math.min(1,Math.sqrt(140000/(rect.width*rect.height*dpr*dpr)));
     const w=Math.max(2,Math.round(rect.width*dpr*limit)),h=Math.max(2,Math.round(rect.height*dpr*limit));
     if(gpu.width!==w||gpu.height!==h){gpu.width=w;gpu.height=h;}if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+    if(host.classList.contains('preloader-glass-letter')){
+      const text=Array.from(host.childNodes).filter(node=>node.nodeType===Node.TEXT_NODE).map(node=>node.textContent).join('');
+      const key=[w,h,style.font,text].join('|');
+      if(record.textMask?.key!==key){
+        if(record.textMask){gl.deleteTexture(record.textMask.field);gl.deleteTexture(record.textMask.coverage);}
+        const mask=createTextGlassMask(text,style,w,h,rect.width,rect.height);
+        const upload=(pixels:Uint8Array)=>{const target=texture();gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,w,h,0,gl.RGBA,gl.UNSIGNED_BYTE,pixels);return target;};
+        record.textMask={key,field:upload(mask.field),coverage:upload(mask.coverage)};
+      }
+    }
     gl.viewport(0,0,w,h);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(program);
     let sourceWidth=background.width,sourceHeight=background.height,localScale=backgroundScale;
     gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,backdropTexture);
@@ -130,17 +142,18 @@ export async function mountSiteGlass() {
       const t=motion.matches?0:time*.00015;discContext.clearRect(0,0,256,256);discContext.drawImage(background,rect.x*backgroundScale,rect.y*backgroundScale,rect.width*backgroundScale,rect.height*backgroundScale,0,0,256,256);discContext.save();discContext.globalAlpha=.62;discContext.translate(128,128);discContext.rotate(Math.sin(t)*.07);discContext.scale(1.13,1.13);discContext.drawImage(icon,-128+Math.sin(t)*5,-128,256,256);discContext.restore();
       gl.bindTexture(gl.TEXTURE_2D,discTexture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,discBackground);sourceWidth=sourceHeight=256;localScale=256/rect.width;v('u_containerPosition',128,128);
     }else v('u_containerPosition',(rect.x+rect.width/2)*backgroundScale,(rect.y+rect.height/2)*backgroundScale);
-    gl.uniform1i(uniforms.u_image,0);gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,kind==='text'?textTexture:kind==='disc'?circleTexture:emptyMask);gl.uniform1i(uniforms.u_shapeMask,1);
-    gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,kind==='text'?textCoverageTexture:kind==='disc'?circleCoverageTexture:emptyMask);gl.uniform1i(uniforms.u_shapeCoverage,2);
+    gl.uniform1i(uniforms.u_image,0);gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,kind==='text'?(record.textMask?.field??textTexture):kind==='disc'?circleTexture:emptyMask);gl.uniform1i(uniforms.u_shapeMask,1);
+    gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,kind==='text'?(record.textMask?.coverage??textCoverageTexture):kind==='disc'?circleCoverageTexture:emptyMask);gl.uniform1i(uniforms.u_shapeCoverage,2);
     v('u_resolution',rect.width*localScale,rect.height*localScale);v('u_textureSize',sourceWidth,sourceHeight);
     let radius=parseFloat(style.borderTopLeftRadius)||0;if(style.borderTopLeftRadius.includes('%'))radius=Math.min(rect.width,rect.height)*radius/100;
     if(kind==='disc')radius=rect.width/2;if(kind==='text')radius=0;
     f('u_borderRadius',Math.min(radius,rect.width/2,rect.height/2)*localScale);f('u_scrollY',0);f('u_blurRadius',kind==='text'?1.2:kind==='disc'?1.5:2.8);
-    f('u_warp',1);f('u_edgeIntensity',kind==='text'?.004:.012);f('u_rimIntensity',kind==='disc'?.028:.018);f('u_baseIntensity',.0015);
+    f('u_time',motion.matches?0:time*.001);f('u_warp',1);f('u_edgeIntensity',kind==='text'?.025:.012);f('u_rimIntensity',kind==='disc'?.028:.018);f('u_baseIntensity',.0015);
     f('u_edgeDistance',.17);f('u_rimDistance',.75);f('u_baseDistance',.1);f('u_cornerBoost',.001);f('u_rippleEffect',.007);
     const active=host.matches('.desktop-nav a[aria-current],.brand-button[aria-current],.button[aria-pressed=true],.admin-main-nav button[aria-current],.admin-work-tab[aria-pressed=true]');
-    const tone=active?(style.getPropertyValue('--active-color').trim()||'100 36 72').split(/\s+/).map(Number):[240,246,255];
-    gl.uniform3f(uniforms.u_colorTint,tone[0]/255,tone[1]/255,tone[2]/255);f('u_tintOpacity',kind==='disc'?.07:kind==='text'?.08:active?.64:.075);
+    const openingTint=kind==='text'?style.getPropertyValue('--preloader-tint').trim():'';
+    const tone=openingTint?openingTint.split(/\s+/).map(Number):active?(style.getPropertyValue('--active-color').trim()||'100 36 72').split(/\s+/).map(Number):[240,246,255];
+    gl.uniform3f(uniforms.u_colorTint,tone[0]/255,tone[1]/255,tone[2]/255);f('u_tintOpacity',kind==='disc'?.07:kind==='text'?.5:active?.64:.075);
     f('u_masked',kind==='surface'?0:1);f('u_glassText',kind==='text'?1:0);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     context.clearRect(0,0,w,h);context.drawImage(gpu,0,0);
     if(native)host.style.setProperty('--liquid-image',`url("${canvas.toDataURL('image/png')}")`);

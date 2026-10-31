@@ -12,13 +12,13 @@
   font-size:calc(var(--type-small,18px)*10)!important;letter-spacing:.075em;
 }
 .preloader-glass-letter{
-  display:block;position:relative;color:#ded5e4;opacity:.24;
+  display:block;position:relative;color:rgb(var(--preloader-tint,230 236 245));opacity:.24;
   text-shadow:0 1px 0 #ffffff35,0 12px 38px #0005;
   animation:preloader-letter-light 650ms ease-out both;
 }
 @supports (-webkit-background-clip:text) or (background-clip:text){
   .preloader-glass-letter{
-    background:linear-gradient(165deg,#fffc 0%,#ece6ff65 30%,#ffffff35 48%,#e9d4e6a0 51%,#ffffff40 72%,#fffc 100%);
+    background:linear-gradient(165deg,#fffc 0%,rgb(var(--preloader-tint)/.65) 30%,rgb(var(--preloader-tint)/.25) 48%,#ffffff90 51%,rgb(var(--preloader-tint)/.5) 72%,#fffc 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
     -webkit-text-stroke:.6px #f9eeff70;
   }

@@ -1,12 +1,18 @@
 "use client";
 
-import {useEffect, useState} from 'react';
+import {useEffect, useLayoutEffect, useState, type CSSProperties} from 'react';
+import {palette} from '../data/palette';
+
 import {AmbientBackground} from './AmbientBackground';
 import {usePathname} from 'next/navigation';
+
+const glassTones = [{name:'Argent',rgb:'230 236 245'}, ...palette];
 
 // The root layout persists across navigation: show this only on a home arrival.
 export function SitePreloader() {
   const pathname = usePathname();
+  const [tone, setTone] = useState(glassTones[0]);
+  useLayoutEffect(() => { setTone(glassTones[Math.floor(Math.random() * glassTones.length)]); }, []);
   const [phase, setPhase] = useState<'loading' | 'leaving' | 'hidden'>(pathname === '/' ? 'loading' : 'hidden');
 
 useEffect(() => {
@@ -71,7 +77,7 @@ useEffect(() => {
 
   if (pathname !== '/' || phase === 'hidden') return null;
   return <>
-    <div className="site-preloader" data-variant="letters" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
+    <div className="site-preloader" data-variant="letters" data-material="liquid-glass" data-tone={tone.name} style={{'--preloader-tint':tone.rgb} as CSSProperties} data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
       <AmbientBackground/>
       <div className="preloader-letters-scene" aria-hidden="true">
         <span className="preloader-glass-wordmark">{Array.from("ARXYLVE", (letter, index) => <span className="preloader-glass-letter" key={index} style={{animationDelay:`${index * 220}ms`}}>{letter}</span>)}</span>
