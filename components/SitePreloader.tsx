@@ -1,7 +1,6 @@
 "use client";
 
 import {useEffect, useState} from 'react';
-import {AmbientBackground} from './AmbientBackground';
 import {usePathname} from 'next/navigation';
 
 // The root layout persists across navigation: show this only on a home arrival.
@@ -71,25 +70,9 @@ useEffect(() => {
 
   if (pathname !== '/' || phase === 'hidden') return null;
   return <>
-    <div className="site-preloader" data-variant="outline" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
-      <AmbientBackground/>
-      <div className="preloader-outline-scene" aria-hidden="true">
-        <span className="preloader-glass-wordmark">
-          <span className="preloader-glass-fill">ARXYLVE</span>
-          <svg className="preloader-outline" width="100%" height="100%" aria-hidden="true" focusable="false">
-            <defs>
-              <linearGradient id="preloader-glass-gradient" x1="0" y1="0" x2=".25" y2="1">
-                <stop offset="0" stopColor="#ffffff" stopOpacity=".8"/>
-                <stop offset=".3" stopColor="#ece6ff" stopOpacity=".4"/>
-                <stop offset=".48" stopColor="#ffffff" stopOpacity=".2"/>
-                <stop offset=".51" stopColor="#e9d4e6" stopOpacity=".63"/>
-                <stop offset=".72" stopColor="#ffffff" stopOpacity=".25"/>
-                <stop offset="1" stopColor="#ffffff" stopOpacity=".8"/>
-              </linearGradient>
-            </defs>
-            <text x="0" y=".9em">ARXYLVE</text>
-          </svg>
-        </span>
+    <div className="site-preloader" data-variant="reveal" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
+      <div className="preloader-reveal-scene" aria-hidden="true">
+        <span className="preloader-glass-wordmark">ARXYLVE</span>
       </div>
     </div>
     <noscript><style>{'.site-preloader{display:none!important}'}</style></noscript>
