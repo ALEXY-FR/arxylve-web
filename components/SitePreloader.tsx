@@ -1,12 +1,14 @@
 "use client";
 
-import {useEffect, useState} from 'react';
+import {useEffect, useId, useState} from 'react';
+import {preloaderLetterPaths} from '../data/preloader-letter-paths';
 import {AmbientBackground} from './AmbientBackground';
 import {usePathname} from 'next/navigation';
 
 // The root layout persists across navigation: show this only on a home arrival.
 export function SitePreloader() {
   const pathname = usePathname();
+  const glassId = useId();
   const [phase, setPhase] = useState<'loading' | 'leaving' | 'hidden'>(pathname === '/' ? 'loading' : 'hidden');
 
 useEffect(() => {
@@ -74,7 +76,23 @@ useEffect(() => {
     <div className="site-preloader" data-variant="letters" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
       <AmbientBackground/>
       <div className="preloader-letters-scene" aria-hidden="true">
-        <span className="preloader-glass-wordmark">{Array.from("ARXYLVE", (letter, index) => <span className="preloader-glass-letter" key={index} style={{animationDelay:`${index * 220}ms`}}>{letter}</span>)}</span>
+        <span className="preloader-glass-wordmark" data-renderer="svg-paths">{preloaderLetterPaths.map((glyph, index) =>
+          <span className="preloader-glass-letter" key={index} style={{animationDelay:(index * 220)+'ms'}}>
+            <svg className="preloader-vector-letter" viewBox={'0 0 '+glyph.width+' '+glyph.height} style={{width:(glyph.width / 1000)+'em',height:'1.15em'}} aria-hidden="true" focusable="false">
+              <defs>
+                <linearGradient id={glassId+'-'+index} gradientUnits="userSpaceOnUse" x1={glyph.x1} y1={glyph.y1} x2={glyph.x2} y2={glyph.y2}>
+                  <stop offset="0" stopColor="white" stopOpacity=".8"/>
+                  <stop offset=".3" stopColor="#ece6ff" stopOpacity=".396"/>
+                  <stop offset=".48" stopColor="white" stopOpacity=".208"/>
+                  <stop offset=".51" stopColor="#e9d4e6" stopOpacity=".627"/>
+                  <stop offset=".72" stopColor="white" stopOpacity=".25"/>
+                  <stop offset="1" stopColor="white" stopOpacity=".8"/>
+                </linearGradient>
+              </defs>
+              <path d={glyph.path} fill={'url(#'+glassId+'-'+index+')'} stroke="#f9eeff70" strokeWidth=".6" vectorEffect="non-scaling-stroke" paintOrder="stroke fill"/>
+            </svg>
+          </span>
+        )}</span>
       </div>
     </div>
     <noscript><style>{'.site-preloader{display:none!important}'}</style></noscript>

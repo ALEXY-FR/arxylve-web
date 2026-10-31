@@ -16,13 +16,7 @@
   text-shadow:0 1px 0 #ffffff35,0 12px 38px #0005;
   animation:preloader-letter-light 650ms ease-out both;
 }
-@supports (-webkit-background-clip:text) or (background-clip:text){
-  .preloader-glass-letter{
-    background:linear-gradient(165deg,#fffc 0%,#ece6ff65 30%,#ffffff35 48%,#e9d4e6a0 51%,#ffffff40 72%,#fffc 100%);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    -webkit-text-stroke:.6px #f9eeff70;
-  }
-}
+.preloader-vector-letter{display:block;overflow:visible}
 .site-preloader[data-phase="leaving"]{opacity:0;pointer-events:none}
 @keyframes preloader-letter-light{
   from{opacity:.24;text-shadow:0 1px 0 #ffffff18,0 0 0 #efd7ff00}
