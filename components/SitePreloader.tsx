@@ -9,7 +9,7 @@ const glyphLayout = preloaderLetterPaths.map((glyph,index) => ({...glyph,x:prelo
 const wordWidth = preloaderLetterPaths.reduce((sum,glyph)=>sum+glyph.width,0);
 const wordHeight = preloaderLetterPaths[0].height;
 const reflectionWidth = 260;
-const reflectionAngle = 8 * Math.PI / 180;
+const reflectionAngle = -23 * Math.PI / 180;
 const reflectionTilt = Math.tan(reflectionAngle) * wordHeight / 2;
 
 // The root layout persists across navigation: show this only on a home arrival.
@@ -83,7 +83,7 @@ useEffect(() => {
     <div className="site-preloader" data-variant="letters" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
       <AmbientBackground/>
       <div className="preloader-letters-scene" aria-hidden="true">
-        <span className="preloader-glass-wordmark" data-renderer="svg-paths" data-reflection="linear-reveal" data-reflection-angle="8">
+        <span className="preloader-glass-wordmark" data-renderer="svg-paths" data-reflection="linear-reveal" data-reflection-angle="-23">
           <svg className="preloader-vector-letter" viewBox={'0 0 '+wordWidth+' '+wordHeight} style={{width:(wordWidth/1000)+'em',height:'1.15em'}} aria-hidden="true" focusable="false">
             <defs>
               {glyphLayout.map((glyph,index)=><linearGradient key={index} id={glassId+'-glass-'+index} gradientUnits="userSpaceOnUse" x1={glyph.x1} y1={glyph.y1} x2={glyph.x2} y2={glyph.y2}>
