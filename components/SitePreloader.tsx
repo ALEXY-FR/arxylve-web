@@ -1,8 +1,8 @@
 "use client";
 
 import {useEffect, useState} from 'react';
-import {usePathname} from 'next/navigation';
 import {AmbientBackground} from './AmbientBackground';
+import {usePathname} from 'next/navigation';
 
 // The root layout persists across navigation: show this only on a home arrival.
 export function SitePreloader() {
@@ -71,10 +71,10 @@ useEffect(() => {
 
   if (pathname !== '/' || phase === 'hidden') return null;
   return <>
-    <div className="site-preloader" data-variant="reflection" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
+    <div className="site-preloader" data-variant="letters" data-phase={phase} role="status" aria-label="Chargement de l’atelier ARXYLVE" aria-live="polite">
       <AmbientBackground/>
-      <div className="preloader-reflection-scene" aria-hidden="true">
-        <span className="preloader-glass-wordmark">ARXYLVE</span>
+      <div className="preloader-letters-scene" aria-hidden="true">
+        <span className="preloader-glass-wordmark">{Array.from("ARXYLVE", (letter, index) => <span className="preloader-glass-letter" key={index} style={{animationDelay:`${index * 220}ms`}}>{letter}</span>)}</span>
       </div>
     </div>
     <noscript><style>{'.site-preloader{display:none!important}'}</style></noscript>
